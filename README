@@ -1,0 +1,204 @@
+
+IO-LUA is a 2D game engine for Lua.
+
+Current platform support: Linux, Mac OS X
+Dependencies: SDL2, SDL2_image, SDL2_ttf, Lua 5
+
+How to use it:
+==============
+
+Create config.lua and game.lua and put them in your game folder.
+Then put your game folder in the io-lua data folder.
+
+For Linux that folder is ~/.local/share/protovision/io-lua
+For Mac OS X that folder is ~/Library/Application Support/protovion/io-lua
+For Windows that folder is %appdata%\protovision\io-lua
+
+Run the game engine executable with the following arguments: +set game GAMEFOLDER
+Where GAMEFOLDER is the name of the folder for your game.
+
+If the game engine is ran without arguments, it executes the game in the "default" 
+folder.
+
+How to compile:
+
+For Linux or Mac OS X:
+======================
+If you have not done this already, download the source code to SDL2, SDL2 image, 
+SDL2 ttf, and Lua. Run ./configure && sudo make install on each of them.
+
+Then go to this project and run ./confgure && make
+======================
+
+For Windows do the following:
+============================
+
+The .lib and .dll files are already provided so just run build.bat 
+from a Visual Studio Command Prompt.
+
+If you ever edit the game engine, run build.bat in the io-lua folder again
+to compile it.
+===========================
+
+
+About config.lua:
+=================
+This script will be executed by the game engine before running your game.
+It's usually used to set game engine variables before the video and audio is initialized.
+See default/config.lua for an example lua configuration script.
+
+Variables that should be set in config.lua include:
+
+v_fullscreen	- Set to 1 for fullscreen or 0 for windowed mode
+v_brightness	- A decimal number from 0 to 1 to set the brightness
+v_grab		- If set to 1, the window will grab keyboard and mouse input
+c_fps		- Maximum frames per second
+
+The following variables change depending on your platform. Experiment with them to get it right.
+
+v_driver	- The index of the video driver to use
+v_renderer	- The index of the 2D graphics renderer to use
+v_height	- The height of the game window
+v_width		- The width of the game window
+
+About game.lua:
+===============
+This is the lua script that the game engine will call after config.lua.
+The game engine will pass control to Lua by invoking the function main.
+
+The signature for the main function is:
+
+function main(event, arg1, arg2, arg3, arg4)
+	...
+end
+
+event will be one of the following values:
+
+EVENT_INIT:
+	This event will be passed only once when the game is initializing.
+	The Lua game should load and initialize any assets it needs.
+
+EVENT_UPDATE:
+	This event will be passed each frame. The Lua game should update things 
+	such as animations.
+
+EVENT_KEYBOARD:
+	The user has pressed a key from the keyboard.
+	arg1 is the key they pressed (see constants.lua for a list of key constants)
+	arg2 is 1 for pressed or 0 for released.
+
+EVENT_MOUSEBUTTON:
+	The user has clicked with their mouse.
+	arg1 is the x coordinate of the mouse.
+	arg2 is the y coordinate of the mouse.
+	arg3 is the BUTTON_LEFT, BUTTON_MIDDLE, or BUTTON_RIGHT.
+	arg4 is 1 for pressed or 0 for released.
+
+EVENT_MOUSEWHEEL:
+	The user has scrolled with their mouse.
+	arg1 is SCROLL_UP for scrolling up (away from the user) or SCROLL_DOWN for scrolling down (toward the user).
+
+EVENT_SHUTDOWN:
+	The game is shutting down. The Lua game should free any handles it has opened.
+
+If the game is compiled with ENABLE_EVENT_MOUSEMOVE set to 1, the following event will be enabled:
+
+EVENT_MOUSEMOVE:
+	The user has moved their mouse.
+	arg1 is the relative x position they moved.
+	arg2 is the relative y position they moved.
+
+
+ 
+The game engine exports the following functions to Lua:
+=======================================================
+Get(var)
+	Gets the value of a game engine variable
+	Returns the value or nil on error
+
+Set(var, value)
+	Sets the value of a game engine variable
+
+GetPlatform()
+	Gets the name of the current operating system.
+	Returns one of the following strings:
+	"Linux", "Mac OS X", "Windows", "iOS", "Android"
+
+LoadFont(filename)
+	Loads a font from a file relative to the current game folder
+	Returns a handle to that font
+
+LoadImage(filename)
+	Loads a jpg or png image from a file relative to the current game folder
+	Returns a handle to that image
+
+DrawText(x, y, text, font, color)
+	Draws text to the screen
+	x and y are the coordinates to draw to.
+	text is the text to display.
+	font is a handle to a font loaded with LoadFont.
+	color is an rgba value.
+
+DrawBackground(image)
+	Draws an image to stretch as the background of the window.
+	image is a handle to an image loaded with LoadImage.
+
+Quit()
+	Sends the EVENT_SHUTDOWN event to the game and then exits the game
+
+FreeFont(font)
+	Frees the handle to a font
+
+FreeImage(image)
+	Frees the handle to an image
+
+SetColor(color)	
+	Sets the drawing color for Clear, DrawLine, DrawRect, and FillRect functions
+
+Clear()
+	Draws a single color to the whole window
+
+DrawLine(x1, y1, x2, y2)
+	Draws a line to the window.
+
+DrawRect(x, y, h, w)
+	Draws a rectangle to the window.
+
+FillRect(x, y, h, w)
+	Fills a rectangle with a color (use SetColor to set the color)
+
+OpenFile(filename, mode)
+	Opens a file relative to the current game folder.
+	mode is an fopen-style mode.
+	Returns a handle to the file or nil on error.
+
+ReadFile(file)
+	Reads the next line from the file handle and returns it as a string without the new line.
+
+WriteFile(file, string)
+	Writes a string to the file handle
+
+SeekFile(file, offset, whence)
+	Seeks the file position in the file handle.
+	offset is the number of characters to seek.
+	whence is SEEK_SET, SEEK_CUR, or SEEK_END.
+	Returns the resulting file offset or nil on error.
+
+CloseFile(file)
+	Closes a file handle
+
+RenameFile(oldfile, newfile)
+	Renames a file
+	Returns nil on error
+
+RemoveFile(filename)
+	Deletes a file
+	Returns nil on error
+
+MakeDirectory(dirname)
+	Creates a directory relative to the current game folder
+	Returns nil on error
+
+RemoveDirectory(dirname)
+	Deletes an empty directory relative to the current game folder
+	Returns nil on error
