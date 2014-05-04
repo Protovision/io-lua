@@ -65,7 +65,7 @@ void	video_drawLine(int x1, int y1, int x2, int y2)
 	SDL_RenderDrawLine(v_renderer, x1, y1, x2, y2);
 }
 
-void	video_drawRect(int x, int y, int h, int w)
+void	video_drawRect(int x, int y, int w, int h)
 {
 	SDL_Rect r;
 	r.x = x;
@@ -76,7 +76,7 @@ void	video_drawRect(int x, int y, int h, int w)
 	SDL_RenderDrawRect(v_renderer, &r);
 }
 
-void	video_fillRect(int x, int y, int h, int w)
+void	video_fillRect(int x, int y, int w, int h)
 {
 	SDL_Rect r;
 	r.x = x;

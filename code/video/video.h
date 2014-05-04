@@ -16,8 +16,8 @@ void	video_render();
 void	video_setColor(unsigned long int color);
 void	video_clear();
 void	video_drawLine(int x1, int y1, int x2, int y2);
-void	video_drawRect(int x, int y, int h, int w);
-void	video_fillRect(int x, int y, int h, int w);
+void	video_drawRect(int x, int y, int w, int h);
+void	video_fillRect(int x, int y, int w, int h);
 void	video_drawPoint(int x, int y);
 
 

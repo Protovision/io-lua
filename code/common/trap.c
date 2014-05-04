@@ -178,8 +178,8 @@ int	trap_DrawRect(lua_State *s)
 {
 	int x, y, h, w;
 
-	trap_args(s, "DrawRect", "iiii", &x, &y, &h, &w);
-	video_drawRect(x, y, h, w);
+	trap_args(s, "DrawRect", "iiii", &x, &y, &w, &h);
+	video_drawRect(x, y, w, h);
 	return 0;
 }
 
@@ -187,8 +187,8 @@ int	trap_FillRect(lua_State *s)
 {
 	int x, y, h, w;
 	
-	trap_args(s, "FillRect", "iiii", &x, &y, &h, &w);
-	video_fillRect(x, y, h, w);
+	trap_args(s, "FillRect", "iiii", &x, &y, &w, &h);
+	video_fillRect(x, y, w, h);
 	return 0;
 }
 
@@ -346,24 +346,10 @@ int	trap_GetWindowSize(lua_State *s)
 	return 2;			
 }
 
-/*
-int	trap_ColorizeImage(lua_State *s)
-{
-	SDL_Texture *img;
-	Uint32 color;
-
-	trap_args(s, "ColorizeImage", "pu", &img, &color);
-	image_colorize(img, color);
-	return 0;
-}
-*/
-
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
 } trap_t;
-
-//int dylan(lua_State *s) { puts("Dylan wins. Always"); return 0; }
 
 trap_t syscalls[] = {
 	{ "Get", trap_Get },
@@ -397,10 +383,6 @@ trap_t syscalls[] = {
 
 	{ "GetWindowSize", trap_GetWindowSize },
 	
-//	{ "ColorizeImage", trap_ColorizeImage },
-
-//	{ "Dylan", dylan },
-
 	{ NULL, NULL }
 };
 

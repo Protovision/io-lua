@@ -28,7 +28,7 @@ void	video_init()
 
 	var_load(video_vars);
 	if (!SDL_WasInit(SDL_INIT_VIDEO)) {
-		if (SDL_Init(SDL_INIT_VIDEO)) {
+		if (SDL_InitSubSystem(SDL_INIT_VIDEO)) {
 			ERROR("Failed to initialize video: %s", SDL_GetError());
 		}
 	}
