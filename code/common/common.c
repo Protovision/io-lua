@@ -91,7 +91,6 @@ void	common_init(int argc, char *argv[])
 
 	base_path = SDL_GetPrefPath("protovision", "io-lua");
 
-	puts(base_path);
 	if (!sys_exists( va("%sconstants.lua", base_path) )) {
 		sys_copy("base/constants.lua", base_path);
 	}
