@@ -4,5 +4,6 @@ del /q *.obj
 if not exist build mkdir build
 copy windows\libs\*.lib build
 copy windows\libs\*.dll build
-copy base build
+mkdir build\base
+robocopy base build\base /E >nul
 move io-lua.exe build
