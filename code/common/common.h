@@ -82,7 +82,7 @@ void		update();
  * =====================================================
  */
 
-void	common_init(int argc, const char **argv);
+void	common_init(int argc, char *argv[]);
 void	common_shutdown();
 
 /* =====================================================

@@ -4,7 +4,7 @@
 
 var_t	*c_game;
 
-void	init(int argc, const char **argv)
+void	init(int argc, char *argv[])
 {
 	common_init(argc, argv);
 	script_load( basepath("constants.lua") );
@@ -24,7 +24,7 @@ void	quit(int sig)
 	exit(0);
 }
 
-int	main(int argc, const char **argv)
+int	main(int argc, char *argv[])
 {
 	Uint32 start, elapsed, delay;
 

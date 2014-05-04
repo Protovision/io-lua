@@ -41,7 +41,7 @@ void	common_set(const char *key, const char *value)
 	}
 }
 
-void	common_parseArgs(int argc, const char **argv)
+void	common_parseArgs(int argc, char *argv[])
 {
 	int i;
 	const char *key, *value;
@@ -71,7 +71,7 @@ void	common_parseArgs(int argc, const char **argv)
 	}
 }
 
-void	common_init(int argc, const char **argv)
+void	common_init(int argc, char *argv[])
 {
 	common_parseArgs(argc, argv);
 
@@ -93,18 +93,10 @@ void	common_init(int argc, const char **argv)
 
 	puts(base_path);
 	if (!sys_exists( va("%sconstants.lua", base_path) )) {
-#ifdef _WINDOWS
-		sys_copy(".\\base\\constants.lua", base_path);
-#else
-		sys_copy("./base/constants.lua", base_path);
-#endif
+		sys_copy("base/constants.lua", base_path);
 	}
 	if (!sys_exists( va("%sdefault", base_path) )) {
-#ifdef _WINDOWS
-		sys_copy(".\\base\\default", base_path);
-#else
-		sys_copy("./base/default", base_path);
-#endif
+		sys_copy("base/default", base_path);
 	}
 }
 
