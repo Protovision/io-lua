@@ -1,11 +1,17 @@
 
 IO-LUA is a 2D game engine for Lua.
 
-Current platform support: Linux, Mac OS X
+Current platform support: Linux, Mac OS X, Windows
 Dependencies: SDL2, SDL2_image, SDL2_ttf, Lua 5
 
 How to use it:
 ==============
+
+There is a sample application provided with this game engine.
+If you just want to test it out, then compile this project then 
+run ./build/io-lua or ./build/io-lua.exe
+
+If you want to script your own lua game follow these instructions:
 
 Create config.lua and game.lua and put them in your game folder.
 Then put your game folder in the io-lua data folder.
