@@ -53,31 +53,24 @@ void    sys_copy(const char *from, const char *to)
 {
     struct stat st;
     const char *p;
-    static char src[256];
     static char dst[256];
-    CFBundleRef bundle;
-    CFURLRef url;
-    
-    bundle = CFBundleGetMainBundle();
-    url = CFBundleCopyBundleURL(bundle);
-    CFURLGetFileSystemRepresentation(url, TRUE, (Uint8*)src, 256);
-    
-    sprintf(src+strlen(src), "/%s", from);
-    
-    p = to + strlen(to) - 1;
-    if (*p == '/') {
-        sprintf(dst, "%s%s", to, strrchr(src, '/')+1);
-    } else {
-        sprintf(dst, "%s%s", to, strrchr(src, '/'));
-    }
-    
-    stat(src, &st);
+   
+//Thanks for indenting with spaces xcode
+ 
+	p = to + strlen(to) - 1;
+	if (*p == '/') {
+	sprintf(dst, "%s%s", to, strrchr(src, '/')+1);
+	} else {
+	sprintf(dst, "%s%s", to, strrchr(src, '/'));
+	}
+
+    stat(from, &st);
 	if (st.st_mode & S_IFDIR) {
-        copyfile(src, dst, NULL, COPYFILE_RECURSIVE|COPYFILE_ALL);
+        copyfile(from, dst, NULL, COPYFILE_RECURSIVE|COPYFILE_ALL);
         return;
 	}
 
-    copyfile(src, dst, NULL, COPYFILE_ALL);
+    copyfile(from, dst, NULL, COPYFILE_ALL);
     
 }
 #else
