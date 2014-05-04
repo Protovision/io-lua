@@ -16,17 +16,9 @@ void	sys_copy(const char *from, const char *to)
 	
 	if (pid == 0) {
 		if (st.st_mode & S_IFDIR) {
-#ifdef __APPLE__
 			execl("/bin/cp", "/bin/cp", "-R", from, to, NULL);
-#else
-			execl("/bin/cp", "-R", from, to, NULL);
-#endif
 		} else {
-#ifdef __APPLE__
 			execl("/bin/cp", "/bin/cp", from, to, NULL);
-#else
-			execl("/bin/cp", from, to, NULL);
-#endif
 		}
 	}
 	waitpid(pid, NULL, 0);
