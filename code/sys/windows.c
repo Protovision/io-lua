@@ -8,14 +8,15 @@ void	sys_copy(const char *from, const char *to)
 {
 	DWORD attr;
 	const char *p;
+
 	int i;
 	static char cmd[1024];
 	static char src[256];
 	static char dst[256];
 
 	for (i = 0; from[i] != 0; ++i) {
-	if (from[i] == '/') src[i] = '\\';
-	else src[i] = from[i];
+		if (from[i] == '/') src[i] = '\\';
+		else src[i] = from[i];
 	}
 	src[i] = 0;
 
@@ -42,8 +43,8 @@ int	sys_exists(const char *file)
 	int i;
 
 	for (i = 0; file[i] != 0; ++i) {
-	if (file[i] == '/') path[i] = '\\';
-	else path[i] = file[i];
+		if (file[i] == '/') path[i] = '\\';
+		else path[i] = file[i];
 	}
 	return GetFileAttributesA(path) != INVALID_FILE_ATTRIBUTES;
 }
