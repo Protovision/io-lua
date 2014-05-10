@@ -130,12 +130,18 @@ GetPlatform()
 	Returns one of the following strings:
 	"Linux", "Mac OS X", "Windows", "iOS", "Android"
 
+GetWindowSize()
+	Returns two integers of the width (x) and the height (y) of the window.
+
 LoadFont(filename)
 	Loads a font from a file relative to the current game folder
 	Returns a handle to that font
 
-LoadImage(filename)
-	Loads a jpg or png image from a file relative to the current game folder
+LoadImage(filename, w, h)
+	Loads a jpg or png image from a file relative to the current game folder.
+	w and h are the width and height to scale the image to; if set to zero, this 
+	function will load the image to it's original width and height. 
+
 	Returns a handle to that image
 
 DrawText(x, y, text, font, color)
