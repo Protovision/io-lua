@@ -83,10 +83,11 @@ int	trap_LoadFont(lua_State *s)
 int	trap_LoadImage(lua_State *s)
 {
 	IMAGE *image;
+	int w, h;
 	const char *imgfile;
 	
-	trap_args(s, "LoadImage", "s", &imgfile);
-	image = image_load(gamepath(imgfile));
+	trap_args(s, "LoadImage", "sii", &imgfile, &w, &h);
+	image = image_load(gamepath(imgfile), w, h);
 	if (image == NULL) {
 		lua_pushnil(s);
 		return 1;

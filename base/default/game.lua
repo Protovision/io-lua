@@ -5,29 +5,20 @@ function main(event, arg1, arg2, arg3, arg4)
 		height, width = GetWindowSize()
 
 		font = LoadFont("fonts/FreeMono.ttf", 60)
-		doge = LoadImage("images/image.jpg")
-
-		file = OpenFile("text/message.txt", "r")
+		doge = LoadImage("images/image.jpg", 0, 0)
 
 		SetColor(0xffffffff)
 		Clear()
-		DrawText(10, 100, ReadFile(file), font, 0x000000ff)
+		DrawText(10, 100, "wow", font, 0x000000ff)
 	
 		FreeFont(font)
-		CloseFile(file)
 
 	elseif event == EVENT_MOUSEBUTTON then
 
 		if arg4 ~= 1 then return end
 		if arg3 ~= BUTTON_LEFT then return end
-                
-                i = 0
-		while i < 25 do
-			x = math.random(height)
-			y = math.random(width)
-			DrawImage(x, y, doge)
-			i = i + 1
-		end 
+               
+		DrawImage(arg1, arg2, doge) 
 
 	elseif event == EVENT_SHUTDOWN then
 

@@ -46,6 +46,7 @@ int	sys_exists(const char *file)
 		if (file[i] == '/') path[i] = '\\';
 		else path[i] = file[i];
 	}
+	path[i] = 0;
 	return GetFileAttributesA(path) != INVALID_FILE_ATTRIBUTES;
 }
 

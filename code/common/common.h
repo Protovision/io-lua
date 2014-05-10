@@ -226,7 +226,7 @@ char	*mem_strdup(const char *s);
 #define		image_shutdown()	(IMG_Quit())
 #define		image_free(I)		(SDL_DestroyTexture((I)))
 
-SDL_Texture	*image_load(const char *file);
+SDL_Texture	*image_load(const char *file, int w, int h);
 void		image_colorize(SDL_Texture *img, Uint32 hue);
 
 /* =====================================================
