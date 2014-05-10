@@ -39,8 +39,8 @@ int	main(int argc, char *argv[])
 		input();
 		update();
 
-		elapsed = SDL_GetTicks()-start;
 		delay = 1000/c_fps->integer;
+		elapsed = SDL_GetTicks()-start;
 
 		if (elapsed < delay) {
 			SDL_Delay(delay-elapsed);
