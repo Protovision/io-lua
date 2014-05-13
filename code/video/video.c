@@ -42,6 +42,7 @@ void	video_init()
 		"IO_LUA", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		v_width->integer, v_height->integer, SDL_WINDOW_SHOWN);
 	v_renderer = SDL_CreateRenderer(v_window, v_renderDriver->integer, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+	SDL_RenderSetLogicalSize(v_renderer, v_width->integer, v_height->integer);
 	SDL_SetWindowGrab(v_window, v_grab->integer);
 	SDL_SetWindowBrightness(v_window, v_brightness->real);
 	SDL_SetWindowFullscreen(v_window, v_fullscreen->integer ? SDL_WINDOW_FULLSCREEN : 0);
