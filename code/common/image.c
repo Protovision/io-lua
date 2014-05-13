@@ -6,6 +6,7 @@ SDL_Texture	*image_load(const char *file, int w, int h)
 	SDL_Texture *texture;
 	SDL_Surface *surface, *scaled, *s;
 	SDL_Rect r;
+	extern SDL_Renderer *v_renderer;
 
 	surface = IMG_Load(file);
 	if (surface == NULL) {

@@ -74,9 +74,6 @@ enum {
 // main.c
 void	quit(int sig);
 
-// update.c
-void		update();
-
 /* =====================================================
  * common.c
  * =====================================================
@@ -240,9 +237,5 @@ char	*basepath(const char *path);
 
 void	sys_copy(const char *from, const char *to);
 int	sys_exists(const char *path);
-
-extern char		*base_path;
-extern var_t		*c_fps;
-extern var_t		*c_game;
 
 #endif

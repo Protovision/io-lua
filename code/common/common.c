@@ -1,6 +1,8 @@
 #include "common.h"
 
 char *base_path;
+var_t *c_game, *c_fps;
+
 static int usepool, smallpool_chunks, smallpool_size, bigpool_chunks, bigpool_size;
 static const char *game;
 
@@ -73,6 +75,12 @@ void	common_parseArgs(int argc, char *argv[])
 
 void	common_init(int argc, char *argv[])
 {
+	extern var_t *c_game, *c_fps;
+	extern char *base_path;
+	extern const char *game;
+	extern int usepool, smallpool_chunks, smallpool_size,
+		bigpool_chunks, bigpool_size;
+
 	common_parseArgs(argc, argv);
 
 	SDL_Init(0);

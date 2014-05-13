@@ -3,9 +3,10 @@
 char	*va(const char *fmt, ...)
 {
 	va_list v;
+	char *buf;
+
 	static int index = 0;
 	static char strings[2][MAX_STRING];
-	char *buf;
 		
 	buf = strings[index & 1];
 	++index;
@@ -20,10 +21,13 @@ char	*va(const char *fmt, ...)
 char	*gamepath(const char *p)
 {
 	char last;
-	char *s;
+	char *s, *path;
+
 	static int index = 0;
 	static char buf[4][MAX_PATH];
-	char *path;
+
+	extern char *base_path;
+	extern var_t *c_game;
 
 	path = buf[index];
 	if (index == 3) index = 0;
@@ -55,10 +59,12 @@ char	*gamepath(const char *p)
 char	*basepath(const char *p)
 {
 	char last;
-	char *s;
+	char *s, *path;
+
 	static int index = 0;
 	static char buf[2][MAX_PATH];
-	char *path;
+
+	extern char *base_path;
 
 	path = buf[index & 1];
 	++index;

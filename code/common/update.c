@@ -6,7 +6,7 @@ var_t	*c_fps;
 void	update()
 {
 	event_t ev;
-
+	
 	event_pull(&ev);
 	
 	switch (ev.type) {

@@ -3,12 +3,10 @@
 
 #include "common/common.h"
 
-extern SDL_Window	*v_window;
-extern SDL_Renderer	*v_renderer;
-	
 void	video_init();
 void	video_shutdown();
 
+void	video_getWindowSize(int *x, int *y);
 void	video_drawText(int x, int y, const char *text, FONT *font, unsigned int color);
 void	video_drawBackground(IMAGE *img);
 void	video_drawImage(int x, int y, IMAGE *image);

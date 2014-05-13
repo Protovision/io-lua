@@ -341,7 +341,7 @@ int	trap_GetWindowSize(lua_State *s)
 {
 	int x, y;
 
-	SDL_GetWindowSize(v_window, &x, &y);
+	video_getWindowSize(&x, &y);
 	lua_pushinteger(s, x);
 	lua_pushinteger(s, y);
 	return 2;			
