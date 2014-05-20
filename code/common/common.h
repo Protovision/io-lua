@@ -178,7 +178,7 @@ void	var_load(gameVar_t *vars);
  * =====================================================
  */
 
-void	script_init(int);
+void	script_init();
 void	script_shutdown();
 void	script_load(const char *luafile);
 void	script_register(const char *cmdname, int (*func)(lua_State*));
@@ -197,7 +197,7 @@ void	trap_shutdown();
  * =====================================================
  */
 
-void	mem_init(int, int, int, int);
+void	mem_init();
 void	mem_shutdown();
 void	*mem_alloc(size_t size);
 void	*mem_realloc(void *ptr, size_t size);

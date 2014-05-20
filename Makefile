@@ -10,16 +10,18 @@ SRC_INPUT=$(shell find ./code/input -name '*.c' -exec basename {} \;)
 SRC_VIDEO=$(shell find ./code/video -name '*.c' -exec basename {} \;)
 SRC_GAME=$(shell find ./code/game -name '*.c' -exec basename {} \;) 
 SRC_SYS=$(shell find ./code/sys -name '*.c' -exec basename {} \;)
+SRC_AUDIO=$(shell find ./code/audio -name '*.c' -exec basename {} \;)
 
-SRC=$(SRC_COMMON) $(SRC_VIDEO) $(SRC_GAME) $(SRC_SYS)
+SRC=$(SRC_COMMON) $(SRC_VIDEO) $(SRC_GAME) $(SRC_SYS) $(SRC_AUDIO)
 
 OBJ_COMMON=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_COMMON))
 OBJ_INPUT=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_INPUT))
 OBJ_VIDEO=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_VIDEO))
 OBJ_GAME=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_GAME))
 OBJ_SYS=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_SYS))
+OBJ_AUDIO=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_AUDIO))
 
-OBJ=$(OBJ_COMMON) $(OBJ_INPUT) $(OBJ_VIDEO) $(OBJ_GAME) $(OBJ_SYS)
+OBJ=$(OBJ_COMMON) $(OBJ_INPUT) $(OBJ_VIDEO) $(OBJ_GAME) $(OBJ_SYS) $(OBJ_AUDIO)
 
 all: makedirs $(BUILD_DIR)/$(EXE)
 
@@ -32,6 +34,8 @@ $(BUILD_DIR)/obj/%.o : code/video/%.c
 $(BUILD_DIR)/obj/%.o : code/game/%.c
 	$(CC) -g -c -o $@ $< $(INCLUDE_FLAGS)
 $(BUILD_DIR)/obj/%.o : code/sys/%.c
+	$(CC) -g -c -o $@ $< $(INCLUDE_FLAGS)
+$(BUILD_DIR)/obj/%.o : code/audio/%.c
 	$(CC) -g -c -o $@ $< $(INCLUDE_FLAGS)
 
 $(BUILD_DIR)/$(EXE) : $(OBJ) 

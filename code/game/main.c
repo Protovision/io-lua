@@ -1,7 +1,7 @@
 #include "common/common.h"
 #include "video/video.h"
 
-void init(int argc, char *argv[])
+void	init(int argc, char *argv[])
 {
 	common_init(argc, argv);
 	script_load( basepath("constants.lua") );
@@ -11,7 +11,7 @@ void init(int argc, char *argv[])
 	script_call("main", "i", EVENT_INIT);
 }
 
-void quit(int sig)
+void	quit(int sig)
 {
 	if (sig != -1) {
 		script_call("main", "i", EVENT_SHUTDOWN);
@@ -21,7 +21,7 @@ void quit(int sig)
 	exit(0);
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	Uint32 start, elapsed, delay;
 	extern var_t *c_fps;

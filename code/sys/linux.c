@@ -10,10 +10,9 @@ void	sys_copy(const char *from, const char *to)
 	pid_t pid;
 	struct stat st;
 
+	if (stat(from, &st)) return;
+	
 	pid = fork();
-	
-	stat(from, &st);
-	
 	if (pid == 0) {
 		if (st.st_mode & S_IFDIR) {
 			execl("/bin/cp", "/bin/cp", "-R", from, to, NULL);

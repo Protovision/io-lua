@@ -4,34 +4,26 @@ static lua_State	*lua;
 
 void	*script_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
 {
-	void *nptr;
 	if (nsize == 0) {
 		mem_free(ptr);
 		return NULL;
 	}
-	nptr = mem_realloc(ptr, nsize);
-	return nptr;
+	return mem_realloc(ptr, nsize);
 }
 
-void	script_init(int usepool)
+void	script_init()
 {
-	if (usepool) {
-		lua = lua_newstate(script_allocator, NULL);
-	} else {
-		lua = luaL_newstate();
-	}
+	lua = lua_newstate(script_allocator, NULL);
 	if (lua == NULL) {
 		ERROR("Failed to initialize Lua");
 	}
 	luaL_openlibs(lua);
-/*
-	luaopen_base(lua);
-	luaopen_table(lua);
-	luaopen_string(lua);
-	luaopen_bit32(lua);
-	luaopen_math(lua);
-	luaopen_package(lua);
-*/
+
+	lua_getglobal(lua, "package");
+	lua_pushstring(lua, "path");
+	lua_pushstring(lua, gamepath("?.lua"));
+	lua_settable(lua, 1);
+	lua_settop(lua, 0);
 }
 
 void	script_shutdown()

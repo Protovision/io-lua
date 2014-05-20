@@ -1,41 +1,28 @@
 #include "common.h"
 
-static void	*smallpool, *bigpool;
-static void	*smallpool_end, *bigpool_end;
-static int	smallpool_chunks, smallpool_size, bigpool_chunks, bigpool_size;
+#define MAX_SMALLVAR	512
+#define	MAX_SMALLPOOL	2048
+#define MAX_BIGVAR	(1024*1024)
+#define MAX_BIGPOOL	63
 
-void	mem_init(
-	int s_chunks,
-	int s_size,
-	int b_chunks,
-	int b_size)
+static char	smallpool[MAX_SMALLVAR*MAX_SMALLPOOL];
+static char	bigpool[MAX_BIGVAR*MAX_BIGPOOL];
+
+void	mem_init()
 {
-	smallpool_chunks = s_chunks;
-	smallpool_size = s_size;
-	bigpool_chunks = b_chunks;
-	bigpool_size = b_size;
-	smallpool = calloc(smallpool_chunks, smallpool_size);
-	smallpool_end = (char*)smallpool + (smallpool_chunks*smallpool_size);
-	bigpool = calloc(bigpool_chunks, bigpool_size);
-	bigpool_end = (char*)bigpool + (bigpool_chunks*bigpool_size);
+	memset(smallpool, 0, sizeof(smallpool));
+	memset(bigpool, 0, sizeof(bigpool));
 }
 
-void	mem_shutdown()
-{
-	if (smallpool) {
-		free(smallpool);
-		smallpool = NULL;
-	}
-	if (bigpool) {
-		free(bigpool);
-		bigpool = NULL;
-	}
-}
+void	mem_shutdown() {}
 
-void	*mem_real_alloc(size_t size, void *pool, void *pool_end, size_t chunksize)
+void	*mem_pool_alloc(size_t size, void *pool, size_t poolsize, size_t varsize)
 {
 	size_t *p;
-	for (p = (size_t*)pool; *p; p = (size_t*)((char*)p+chunksize)) {
+	size_t *pool_end;
+
+	pool_end = (size_t*)((char*)pool + poolsize*varsize);
+	for (p = (size_t*)pool; *p; p = (size_t*)((char*)p+varsize)) {
 		if (p == (size_t*)pool_end) {
 			return NULL;
 		}
@@ -47,12 +34,15 @@ void	*mem_real_alloc(size_t size, void *pool, void *pool_end, size_t chunksize)
 void	*mem_alloc(size_t size)
 {
 	void *ptr;
-	if (size+sizeof(size_t) < smallpool_size) {
-		return mem_real_alloc(size, smallpool, smallpool_end, smallpool_size);
+
+	if (size+sizeof(size_t) < MAX_SMALLVAR) {
+		ptr = mem_pool_alloc(size, smallpool, MAX_SMALLPOOL, MAX_SMALLVAR);
+	} else {
+		ptr = mem_pool_alloc(size, bigpool, MAX_BIGPOOL, MAX_BIGVAR);
 	}
-	ptr = mem_real_alloc(size, bigpool, bigpool_end, bigpool_size);
+
 	if (ptr == NULL) {
-		ERROR("Failed to allocate %zd bytes", size);
+		ERROR("Out of game memory", size);
 	}
 	return ptr;
 }
@@ -60,28 +50,27 @@ void	*mem_alloc(size_t size)
 void	*mem_realloc(void *ptr, size_t size)
 {
 	void *newptr;
+
 	if (ptr == NULL) return mem_alloc(size);
-	if ((char*)ptr - (char*)smallpool < smallpool_chunks*smallpool_size) {
-		if (size+sizeof(size_t) < smallpool_size) {
+
+	if ((char*)ptr - smallpool < MAX_SMALLPOOL*MAX_SMALLVAR) {
+		if (size+sizeof(size_t) < MAX_SMALLVAR) {
 			((size_t*)ptr)[-1] = size;
 			return ptr;
 		} else {
 			newptr = mem_alloc(size);
-			if (newptr == NULL) {
-				ERROR("Failed to allocate %zd bytes", size);
-			}
 			memcpy(newptr, ptr, ((size_t*)ptr)[-1]);
 			return newptr;
 		}	
-	} else if ((char*)ptr - (char*)bigpool < bigpool_chunks*bigpool_size) {
-		if (size+sizeof(size_t) < bigpool_size) {
+	} else if ((char*)ptr - bigpool < MAX_BIGPOOL*MAX_BIGVAR) {
+		if (size+sizeof(size_t) < MAX_BIGVAR) {
 			((size_t*)ptr)[-1] = size;
 			return ptr;
 		} else {
-			ERROR("Failed to allocate %zd", size);
+			ERROR("Out of game memory", size);
 		}
 	}
-	ERROR("Failed to allocate %zd bytes", size);
+
 	return NULL;
 }
 

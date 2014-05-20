@@ -3,6 +3,7 @@
 #define VAR_HASHTABLE_SIZE	256
 #define VAR_MAX			2000
 
+static int	free_var;
 static var_t	variables[VAR_MAX];
 static var_t	*hashtable[VAR_HASHTABLE_SIZE];
 
@@ -34,6 +35,7 @@ var_t	*var_get(const char *name)
 
 var_t	*var_allocate()
 {
+/*
 	int i;
 	
 	for (i = 0; i != VAR_MAX; ++i) {
@@ -41,6 +43,10 @@ var_t	*var_allocate()
 			return &variables[i];
 	}
 	return NULL;
+*/
+
+	if (free_var == VAR_MAX) return NULL;
+	return &variables[free_var++];
 }
 
 var_t	*var_set(const char *varname, const char *value)
@@ -77,6 +83,7 @@ var_t	*var_set(const char *varname, const char *value)
 
 void	var_init()
 {
+	free_var = 0;
 	memset(variables, 0, sizeof(variables));
 	memset(hashtable, 0, sizeof(hashtable));
 }

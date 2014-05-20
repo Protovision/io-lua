@@ -26,7 +26,7 @@ void	sys_copy(const char *from, const char *to)
 
 	bundle = CFBundleGetMainBundle();
 	url = CFBundleCopyBundleURL(bundle);
-	CFURLGetFileSystemRepresentation(url, TRUE, (Uint8*)src, 256);
+	CFURLGetFileSystemRepresentation(url, TRUE, (UInt8*)src, 256);
 
 	sprintf(src+strlen(src), "/%s", from);
     
