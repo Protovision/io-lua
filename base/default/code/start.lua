@@ -13,31 +13,27 @@ start_buttons = {
 
 function start_init()
 	start_font = LoadFont("fonts/helvetica-neue-lt-com-25-ultra-light.ttf", 64)
-end
+	callback_mousebutton = start_mousebutton
+	callback_shutdown = start_shutdown
 
-function start_destroy()
-	FreeFont(start_font)
-end
-
-
-function start_event_click(x, y, button, pressed)
-	if pressed ~= 1 then return end
-	
-	if x > start_button_exit.x and x < start_button_exit.x + 80 and
-		y > start_button_exit.y and y < start_button_exit.y + 50 then
-		--start_destroy()
-		callback_mousebutton = nil
-		Quit()
-	end
-end
-
-
-function start_show()
 	SetColor(0xffffffff)
 	Clear()
 	for key, value in pairs(start_buttons) do
 		DrawText(value.x, value.y, value.text, start_font, 0x000000ff)
 	end
-	
-	return start_event_click
 end
+
+function start_shutdown()
+	FreeFont(start_font)
+end
+
+
+function start_mousebutton(x, y, button, pressed)
+	if pressed ~= 1 then return end
+	
+	if x > start_button_exit.x and x < start_button_exit.x + 80 and
+		y > start_button_exit.y and y < start_button_exit.y + 50 then
+		Quit()
+	end
+end
+

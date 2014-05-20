@@ -6,7 +6,6 @@ function main(event, arg1, arg2, arg3, arg4)
 	if event == EVENT_INIT then
 
 		title_init()
-		callback_mousebutton = title_show()
 	
 	elseif event == EVENT_MOUSEBUTTON then
 
@@ -15,8 +14,10 @@ function main(event, arg1, arg2, arg3, arg4)
 		end
 
 	elseif event == EVENT_SHUTDOWN then
-
-		FreeFont(title_font)
+		
+		if callback_shutdown ~= nil then
+			callback_shutdown()
+		end
 
 	elseif event == EVENT_KEYBOARD then
 
