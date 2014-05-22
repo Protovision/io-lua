@@ -7,9 +7,9 @@ static int	free_var;
 static var_t	variables[VAR_MAX];
 static var_t	*hashtable[VAR_HASHTABLE_SIZE];
 
-int	var_hash(const char *key)
+unsigned int	var_hash(const char *key)
 {
-	int hash;
+	unsigned int hash;
 
 	hash = 0;
 	while (*key != 0) {
@@ -21,7 +21,7 @@ int	var_hash(const char *key)
 
 var_t	*var_get(const char *name)
 {
-	int hash;
+	unsigned int hash;
 	var_t *v;
 
 	hash = var_hash(name) % VAR_HASHTABLE_SIZE;
@@ -51,7 +51,7 @@ var_t	*var_allocate()
 
 var_t	*var_set(const char *varname, const char *value)
 {
-	int hash;
+	unsigned int hash;
 	var_t *v, *w;
 		
 	hash = var_hash(varname) % VAR_HASHTABLE_SIZE;

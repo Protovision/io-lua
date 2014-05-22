@@ -59,12 +59,14 @@ void	sound_init()
 
 void	sound_shutdown() {}
 
-static int	sound_hash(const char *file)
+static unsigned int	sound_hash(const char *file)
 {
-	int	i, hash;
+	int	i;
+	unsigned int hash;
 	char	ch;
 
-	hash = i = 0;
+	hash = 0;
+	i = 0;
 	while (*file) {
 		ch = tolower(*file);
 		if (ch == '.') break;
@@ -79,7 +81,8 @@ static int	sound_hash(const char *file)
 
 static sound_t	*sound_alloc(const char *file)
 {
-	int i, hash;
+	int i;
+	unsigned int hash;
 	sound_t	*s;
 
 	hash = sound_hash(file);
@@ -109,7 +112,7 @@ static sound_t	*sound_alloc(const char *file)
 
 void	sound_free(sound_t *s)
 {
-	int hash;
+	unsigned int hash;
 	sound_t *s1, *s2;
 
 	hash = sound_hash(s->path);
