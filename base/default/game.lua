@@ -5,6 +5,9 @@ function main(event, arg1, arg2, arg3, arg4)
 
 	if event == EVENT_INIT then
 
+		sound = LoadSound("AgoraCastleIntro.wav")
+		channel = LoopSound(sound)
+
 		title_init()
 	
 	elseif event == EVENT_MOUSEBUTTON then
@@ -15,14 +18,16 @@ function main(event, arg1, arg2, arg3, arg4)
 
 	elseif event == EVENT_SHUTDOWN then
 		
+		FreeSound(sound)	
 		if callback_shutdown ~= nil then
 			callback_shutdown()
 		end
 
 	elseif event == EVENT_KEYBOARD then
 
-		if arg1 == KEY_Q then Quit() end
-
+		if arg1 == KEY_Q then Quit() 
+		elseif arg1 == KEY_P then PauseSound(channel) 
+		elseif arg1 == KEY_R then ResumeSound(channel) end
 	end
 
 end

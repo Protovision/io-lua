@@ -1,5 +1,6 @@
 #include "common/common.h"
 #include "video/video.h"
+#include "audio/audio.h"
 
 void	init(int argc, char *argv[])
 {
@@ -7,6 +8,7 @@ void	init(int argc, char *argv[])
 	script_load( basepath("constants.lua") );
 	script_load( gamepath("config.lua") );
 	video_init();
+	audio_init();
 	script_load( gamepath("game.lua") );
 	script_call("main", "i", EVENT_INIT);
 }
@@ -16,6 +18,7 @@ void	quit(int sig)
 	if (sig != -1) {
 		script_call("main", "i", EVENT_SHUTDOWN);
 	}
+	audio_shutdown();
 	video_shutdown();
 	common_shutdown();
 	exit(0);

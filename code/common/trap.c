@@ -1,5 +1,6 @@
 #include "common.h"
 #include "video/video.h"
+#include "audio/audio.h"
 
 void	trap_args(lua_State *s, const char *funcname, const char *fmt, ...)
 {
@@ -347,6 +348,76 @@ int	trap_GetWindowSize(lua_State *s)
 	return 2;			
 }
 
+int	trap_LoadSound(lua_State *s)
+{
+	const char *filename;
+	sound_t *w;
+
+	trap_args(s, "LoadSound", "s", &filename);
+	w = sound_load(gamepath(filename));
+	if (w == NULL) return 0;
+	lua_pushlightuserdata(s, w);
+	return 1;
+}
+
+int	trap_PlaySound(lua_State *s)
+{
+	sound_t *w;
+	channel_t *c;	
+
+	trap_args(s, "PlaySound", "p", &w);
+	c = sound_play(w, 0);
+	lua_pushlightuserdata(s, c);
+	return 1;
+}
+
+int	trap_LoopSound(lua_State *s)
+{
+	sound_t *w;
+	channel_t *c;
+
+	trap_args(s, "LoopSound", "p", &w);
+	c = sound_play(w, 1);
+	lua_pushlightuserdata(s, c);
+	return 1;
+}
+
+int	trap_FreeSound(lua_State *s)
+{
+	sound_t *w;
+	
+	trap_args(s, "FreeSound", "p", &w);
+	sound_free(w);
+	return 0;
+}
+
+int	trap_PauseSound(lua_State *s)
+{
+	channel_t *c;
+
+	trap_args(s, "PauseSound", "p", &c);
+	sound_pause(c);
+	return 0;
+}
+
+int	trap_ResumeSound(lua_State *s)
+{
+	channel_t *c;
+
+	trap_args(s, "ResumeSound", "p", &c);
+	sound_resume(c);
+	return 0;
+}
+
+int	trap_StopSound(lua_State *s)
+{
+	channel_t *c;
+
+	trap_args(s, "StopSound", "p", &c);
+	sound_stop(c);
+	return 0;
+}
+
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -383,7 +454,15 @@ trap_t syscalls[] = {
 	{ "RemoveDirectory", trap_RemoveDirectory },
 
 	{ "GetWindowSize", trap_GetWindowSize },
-	
+
+	{ "LoadSound", trap_LoadSound },
+	{ "PlaySound", trap_PlaySound },
+	{ "LoopSound", trap_LoopSound },
+	{ "FreeSound", trap_FreeSound },
+	{ "PauseSound", trap_PauseSound },
+	{ "ResumeSound", trap_ResumeSound },
+	{ "StopSound", trap_StopSound },
+
 	{ NULL, NULL }
 };
 
