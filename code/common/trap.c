@@ -209,7 +209,7 @@ int	trap_OpenFile(lua_State *s)
 	FILE *fp;
 	
 	trap_args(s, "OpenFile", "ss", &file, &mode);
-	fp = fopen(gamepath(file), mode);
+	fp = fopen(datapath(file), mode);
 	if (fp == NULL) {
 		lua_pushnil(s);
 		return 1;
@@ -282,7 +282,7 @@ int	trap_RenameFile(lua_State *s)
 	const char *oldname, *newname;
 
 	trap_args(s, "RenameFile", "ss", &oldname, &newname);
-	if (rename(gamepath(oldname), gamepath(newname)) < 0) {
+	if (rename(datapath(oldname), datapath(newname)) < 0) {
 		lua_pushnil(s);
 		return 1;
 	}
@@ -295,7 +295,7 @@ int	trap_RemoveFile(lua_State *s)
 	const char *file;
 
 	trap_args(s, "RemoveFile", "s", &file);
-	if (remove(gamepath(file)) < 0) {
+	if (remove(datapath(file)) < 0) {
 		lua_pushnil(s);
 		return 1;
 	}
@@ -308,7 +308,7 @@ int	trap_MakeDirectory(lua_State *s)
 	const char *dir;
 
 	trap_args(s, "MakeDirectory", "s", &dir);
-	if (MKDIR(gamepath(dir), 0666) < 0) {
+	if (MKDIR(datapath(dir), 0666) < 0) {
 		lua_pushnil(s);
 		return 1;
 	}
@@ -321,7 +321,7 @@ int	trap_RemoveDirectory(lua_State *s)
 	const char *dir;
 
 	trap_args(s, "RemoveDirectory", "s", &dir);
-	if (RMDIR(gamepath(dir)) < 0) {
+	if (RMDIR(datapath(dir)) < 0) {
 		lua_pushnil(s);
 		return 1;
 	}

@@ -27,8 +27,6 @@ void	quit(int sig)
 int	main(int argc, char *argv[])
 {
 	Uint32 start, elapsed, delay;
-	extern var_t *c_fps;
-	extern void input(), update();
 
 	init(argc, argv);
 

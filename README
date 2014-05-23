@@ -11,61 +11,71 @@ There is a sample application provided with this game engine.
 If you just want to test it out, then compile this project then 
 run ./build/io-lua or ./build/io-lua.exe
 
-If you want to script your own lua game follow these instructions:
+If you want to script your own lua game, edit the files 
+inside the ./game folder. You can add any files you want in the 
+game folder, just make sure that config.lua and game.lua exist.
 
-Create config.lua and game.lua and put them in your game folder.
-Then put your game folder in the io-lua data folder.
+When the game engine executable is ran, it looks in the game 
+folder from the current directory and runs config.lua and then 
+game.lua. 
 
-For Linux that folder is ~/.local/share/protovision/io-lua
-For Mac OS X that folder is ~/Library/Application Support/protovion/io-lua
-For Windows that folder is %appdata%\protovision\io-lua
+After compiling, these output files will be in the build folder:
 
-Run the game engine executable with the following arguments: +set game GAMEFOLDER
-Where GAMEFOLDER is the name of the folder for your game.
+constants.lua	- This will always be the first script executed
+		by the game engine
 
-If the game engine is ran without arguments, it executes the game in the "default" 
-folder.
+io-lua(.exe)	- The game engine executable
+
+game/		- The folder containing the Lua game scripts
+		and assets
 
 How to compile:
+===============
+Note: Every time you compile, everything in the build folder gets overwritten.
 
 For Linux or Mac OS X:
-======================
+
 If you have not done this already, download the source code to SDL2, SDL2 image, 
 SDL2 ttf, and Lua. Run ./configure && sudo make install on each of them.
 
-Then go to this project and run ./confgure && make
-======================
+Then go to this project and run ./configure && make
+
 
 For Windows do the following:
-============================
 
 The .lib and .dll files are already provided so just run build.bat 
 from a Visual Studio Command Prompt.
 
-If you ever edit the game engine, run build.bat in the io-lua folder again
-to compile it.
-===========================
+If you ever edit the game engine, run build.bat again
+
 
 
 About config.lua:
 =================
 This script will be executed by the game engine before running your game.
 It's usually used to set game engine variables before the video and audio is initialized.
-See default/config.lua for an example lua configuration script.
+All game engine variables will assume their individual default values if left uninitialized.
 
-Variables that should be set in config.lua include:
+List of game engine variables:
 
-v_fullscreen	- Set to 1 for fullscreen or 0 for windowed mode
-v_brightness	- A decimal number from 0 to 1 to set the brightness
-v_grab		- If set to 1, the window will grab keyboard and mouse input
-c_fps		- Maximum frames per second
+gamepath	- Directory of game that contains the lua scripts and assets
+datapath	- Directory of where game can write data
+fps		- Maximum frames per second
+* v_width	- Window width in pixels (X coordinates)
+* v_height	- Window height in pixles (Y coordinate)
+* v_driver	- Index of video driver to use
+* v_renderer	- Index of render driver to use
+v_fullscreen	- 1 or 0 for fullscreen
+v_grab		- 1 or 0 for grabbing mouse input to not leave the window
+s_volume	- Volume of sound. 0.0 is mute, 1.0 is full volume, there is no enforced volume limit.
+s_driver	- Index of sound driver to use
+s_device	- Index of sound device to use for output
+s_freq		- Speed of sound playback
+s_format	- Bit size of sound samples (8, 16, or 32)
+s_channels	- 1 for mono, 2 for stereo
+s_samples	- Audio buffer size in samples
 
-The following variables change depending on your platform. Experiment with them to get it right.
-
-v_driver	- The index of the video driver to use
-v_renderer	- The index of the 2D graphics renderer to use
-v_height	- The height of the game window
-v_width		- The width of the game window
+* - Some variables are platform dependent and will require being set in config.lua
 
 About game.lua:
 ===============
@@ -100,20 +110,8 @@ EVENT_MOUSEBUTTON:
 	arg3 is the BUTTON_LEFT, BUTTON_MIDDLE, or BUTTON_RIGHT.
 	arg4 is 1 for pressed or 0 for released.
 
-EVENT_MOUSEWHEEL:
-	The user has scrolled with their mouse.
-	arg1 is SCROLL_UP for scrolling up (away from the user) or SCROLL_DOWN for scrolling down (toward the user).
-
 EVENT_SHUTDOWN:
 	The game is shutting down. The Lua game should free any handles it has opened.
-
-If the game is compiled with ENABLE_EVENT_MOUSEMOVE set to 1, the following event will be enabled:
-
-EVENT_MOUSEMOVE:
-	The user has moved their mouse.
-	arg1 is the relative x position they moved.
-	arg2 is the relative y position they moved.
-
 
  
 The game engine exports the following functions to Lua:
@@ -134,13 +132,14 @@ GetWindowSize()
 	Returns two integers of the width (x) and the height (y) of the window.
 
 LoadFont(filename)
-	Loads a font from a file relative to the current game folder
+	Loads a font from a file relative to gamepath.
 	Returns a handle to that font
 
 LoadImage(filename, w, h)
-	Loads a jpg or png image from a file relative to the current game folder.
-	w and h are the width and height to scale the image to; if set to zero, this 
-	function will load the image to it's original width and height. 
+	Loads a jpg or png image from a file relative gamepath.
+	w and h are the width and height to scale the image to; if set to
+	zero, this function will load the image to it's original width and
+	height. 
 
 	Returns a handle to that image
 
@@ -154,6 +153,10 @@ DrawText(x, y, text, font, color)
 DrawBackground(image)
 	Draws an image to stretch as the background of the window.
 	image is a handle to an image loaded with LoadImage.
+
+DrawImage(x, y, image)
+	Draws an image at the specified location in the window
+	image is a handle to an image loaded with LoadImage
 
 Quit()
 	Sends the EVENT_SHUTDOWN event to the game and then exits the game
@@ -180,12 +183,13 @@ FillRect(x, y, h, w)
 	Fills a rectangle with a color (use SetColor to set the color)
 
 OpenFile(filename, mode)
-	Opens a file relative to the current game folder.
+	Opens a file relative to datapath.
 	mode is an fopen-style mode.
 	Returns a handle to the file or nil on error.
 
 ReadFile(file)
-	Reads the next line from the file handle and returns it as a string without the new line.
+	Reads the next line from the file handle and returns it as a string
+	without the new line.
 
 WriteFile(file, string)
 	Writes a string to the file handle
@@ -200,17 +204,47 @@ CloseFile(file)
 	Closes a file handle
 
 RenameFile(oldfile, newfile)
-	Renames a file
+	Renames a file relative to datapath.
 	Returns nil on error
 
 RemoveFile(filename)
-	Deletes a file
+	Deletes a file relative to datapath.
 	Returns nil on error
 
 MakeDirectory(dirname)
-	Creates a directory relative to the current game folder
+	Creates a directory relative to datapath.
 	Returns nil on error
 
 RemoveDirectory(dirname)
-	Deletes an empty directory relative to the current game folder
+	Deletes an empty directory relative to datapath.
 	Returns nil on error
+
+GetWindowSize()
+	Returns the width and height of the window
+
+LoadSound(file)
+	Loads a wav file relative to gamepath.
+	Returns a handle to the loaded sound.
+
+PlaySound(sound)
+	Begins playing a sound from a sound handle.
+	Returns a handle to the new channel.
+
+LoopSound(sound)
+	Begins playing a sound from a sound handle.
+	The sound will play in a loop.
+	Returns a handle to the new channel.
+
+FreeSound(sound)
+	Frees the handle to a sound
+
+PauseSound(channel)
+	Pauses a playing channel
+
+ResumeSound(channel)
+	Resumes a paused channel
+
+StopSound(channel)
+	Stops playing a sound channel
+
+	

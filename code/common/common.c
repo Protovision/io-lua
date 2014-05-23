@@ -1,11 +1,12 @@
 #include "common.h"
 
-char *base_path;
-var_t *c_game, *c_fps;
+char	*_basepath;
+var_t	*c_gamepath, *c_datapath, *c_fps;
 
 void	common_init(int argc, char *argv[])
 {
 	int i;
+	char *s;
 
 	SDL_Init(0);
 	mem_init();
@@ -19,38 +20,35 @@ void	common_init(int argc, char *argv[])
 		}
 	}
 
-	c_game = var_get("c_game");
-	if (c_game == NULL) {
-		c_game = var_set("c_game", "default");
-	}
-
-	c_fps = var_get("c_fps");
-	if (c_fps == NULL) {
-		c_fps = var_set("c_fps", "85");
-	}
-
-	base_path = SDL_GetPrefPath("protovision", "io-lua");
-
-	if (!sys_exists( va("%sconstants.lua", base_path) )) {
-		sys_copy("base/constants.lua", base_path);
-	}
-	if (!sys_exists( va("%sdefault", base_path) )) {
-		sys_copy("base/default", base_path);
-	}
+	_basepath = SDL_GetBasePath();
 	
+	c_gamepath = var_get("gamepath");
+	if (c_gamepath == NULL) {
+		c_gamepath = var_set("gamepath", va("%sgame", _basepath));
+	}
+
+	c_datapath = var_get("datapath");
+	if (c_datapath == NULL) {
+		s = SDL_GetPrefPath("protovision", "io-lua");
+		c_datapath = var_set("datapath", s);
+		SDL_free(s);
+	}
+
+	c_fps = var_get("fps");
+	if (c_fps == NULL) {
+		c_fps = var_set("fps", "85");
+	}
+
 	script_init();
 	trap_init();
 	font_init();
 	image_init();
 	event_init();
-
-
 }
 
 void	common_shutdown()
 {
-	SDL_free(base_path);
-
+	SDL_free(_basepath);
 	event_shutdown();
 	image_shutdown();
 	font_shutdown();

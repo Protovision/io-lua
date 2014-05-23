@@ -18,45 +18,7 @@ char	*va(const char *fmt, ...)
 	return buf;
 }
 
-char	*gamepath(const char *p)
-{
-	char last;
-	char *s, *path;
-
-	static int index = 0;
-	static char buf[4][MAX_PATH];
-
-	extern char *base_path;
-	extern var_t *c_game;
-
-	path = buf[index];
-	if (index == 3) index = 0;
-	else ++index;
-
-	last = 0;
-#ifdef _WINDOWS
-	sprintf(path, "%s%s\\", base_path, c_game->string);
-#else
-	sprintf(path, "%s%s/", base_path, c_game->string);
-#endif
-	for (s = path + strlen(path); *p; ++p, ++s) {
-		if (last == '.' && *p == '.') {
-			--s;
-			continue;
-		}
-#ifdef _WINDOWS
-		if (*p == '/') last = *s = '\\';
-		else
-#endif
-		last = *s = *p;
-	}
-
-	*s = 0;
-	return path;
-		
-}
-
-char	*basepath(const char *p)
+char	*pathjoin(const char *base, const char *p)
 {
 	char last;
 	char *s, *path;
@@ -64,14 +26,16 @@ char	*basepath(const char *p)
 	static int index = 0;
 	static char buf[2][MAX_PATH];
 
-	extern char *base_path;
-
 	path = buf[index & 1];
 	++index;
 
 	last = 0;
 
-	strcpy(path, base_path);
+#ifdef _WINDOWS
+	sprintf(path, "%s\\", base);
+#else
+	sprintf(path, "%s/", base);
+#endif
 
 	for (s = path + strlen(path); *p; ++p, ++s) {
 		if (last == '.' && *p == '.') {
@@ -89,4 +53,3 @@ char	*basepath(const char *p)
 	return path;
 		
 }
-

@@ -74,6 +74,12 @@ enum {
 // main.c
 void	quit(int sig);
 
+//input.c
+void	input();
+
+//update.c
+void	update();
+
 /* =====================================================
  * common.c
  * =====================================================
@@ -232,10 +238,15 @@ void		image_colorize(SDL_Texture *img, Uint32 hue);
  */
 
 char	*va(const char *fmt, ...);
-char	*gamepath(const char *path);
-char	*basepath(const char *path);
+char	*pathjoin(const char *base, const char *path);
+#define basepath(p)	(pathjoin(_basepath, (p)))
+#define gamepath(p)	(pathjoin(c_gamepath->string, (p)))
+#define datapath(p)	(pathjoin(c_datapath->string, (p)))
 
-void	sys_copy(const char *from, const char *to);
-int	sys_exists(const char *path);
+
+
+extern	char *_basepath;
+extern	var_t *c_gamepath, *c_datapath, *c_fps;
+
 
 #endif
