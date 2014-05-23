@@ -6,7 +6,6 @@ SDL_AudioDeviceID	dev;
 SDL_AudioSpec audio_spec;
 
 gameVar_t sound_vars[] = {
-	{ &s_driver, "s_driver", "0" },
 	{ &s_device, "s_device", "0" },
 	{ &s_freq, "s_freq", "44100" },
 	{ &s_format, "s_format", "16" },
@@ -18,12 +17,20 @@ gameVar_t sound_vars[] = {
 
 void	audio_init()
 {
-	const char *device, *driver;
+	const char *device, *driver, *s;
 	SDL_AudioSpec desired;
 	
 	extern void audio_callback(void *, Uint8 *, int);
 
 	var_load(sound_vars);
+
+	s_driver = var_get("s_driver");
+	
+	if (strcmp(platform, "Windows") == 0) {
+		s_driver = var_set("s_driver", "2");
+	} else if (strcmp(platform, "Mac OS X") == 0 || strcmp(platform, "Linux") == 0) {
+		s_driver = var_set("s_driver", "0");
+	}
 
 	if (!SDL_WasInit(SDL_INIT_AUDIO)) {
 		if (SDL_InitSubSystem(SDL_INIT_AUDIO))

@@ -1,7 +1,8 @@
 #include "common.h"
 
-char	*_basepath;
-var_t	*c_gamepath, *c_datapath, *c_fps;
+char		*_basepath;
+const char	*platform;
+var_t		*c_gamepath, *c_datapath, *c_fps;
 
 void	common_init(int argc, char *argv[])
 {
@@ -21,7 +22,8 @@ void	common_init(int argc, char *argv[])
 	}
 
 	_basepath = SDL_GetBasePath();
-	
+	platform = SDL_GetPlatform();
+
 	c_gamepath = var_get("gamepath");
 	if (c_gamepath == NULL) {
 		c_gamepath = var_set("gamepath", va("%sgame", _basepath));

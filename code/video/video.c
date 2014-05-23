@@ -12,8 +12,8 @@ SDL_Window	*v_window;
 SDL_Renderer	*v_renderer;
 
 gameVar_t	video_vars[] = {
-	{ &v_driver, "v_driver", "0" },
-	{ &v_renderDriver, "v_renderer", "-1" },
+	//{ &v_driver, "v_driver", "0" },
+	//{ &v_renderDriver, "v_renderer", "-1" },
 	{ &v_width, "v_width", "640" },
 	{ &v_height, "v_height", "480" },
 	{ &v_fullscreen, "v_fullscreen", "0" },
@@ -27,6 +27,22 @@ void	video_init()
 	const char *driver_name;
 
 	var_load(video_vars);
+
+	v_driver = var_get("v_driver");
+	v_renderDriver = var_get("v_renderer");
+	
+	if (strcmp(platform, "Mac OS X") == 0) {
+		if (v_driver == NULL)
+			v_driver = var_set("v_driver", "0");
+		if (v_renderDriver == NULL) 
+			v_renderDriver = var_set("v_renderer", "1");
+	} else if (strcmp(platform, "Windows") == 0 || strcmp(platform, "Linux") == 0) {
+		if (v_driver == NULL)
+			v_driver = var_set("v_driver", "0");
+		if (v_renderDriver == NULL)
+			v_renderDriver = var_set("v_renderer", "-1");
+	}
+
 	if (!SDL_WasInit(SDL_INIT_VIDEO)) {
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO)) {
 			ERROR("Failed to initialize video: %s", SDL_GetError());

@@ -246,6 +246,7 @@ char	*pathjoin(const char *base, const char *path);
 
 
 extern	char *_basepath;
+extern	const char *platform;
 extern	var_t *c_gamepath, *c_datapath, *c_fps;
 
 
