@@ -418,6 +418,12 @@ int	trap_StopSound(lua_State *s)
 	return 0;
 }
 
+int	trap_GetTicks(lua_State *s)
+{
+	lua_pushinteger(s, SDL_GetTicks());
+	return 1;
+}
+
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -462,6 +468,8 @@ trap_t syscalls[] = {
 	{ "PauseSound", trap_PauseSound },
 	{ "ResumeSound", trap_ResumeSound },
 	{ "StopSound", trap_StopSound },
+
+	{ "GetTicks", trap_GetTicks },
 
 	{ NULL, NULL }
 };
