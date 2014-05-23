@@ -61,10 +61,10 @@ List of game engine variables:
 gamepath	- Directory of game that contains the lua scripts and assets
 datapath	- Directory of where game can write data
 fps		- Maximum frames per second
-* v_width	- Window width in pixels (X coordinates)
-* v_height	- Window height in pixles (Y coordinate)
-* v_driver	- Index of video driver to use
-* v_renderer	- Index of render driver to use
+v_width		- Window width in pixels (X coordinates)
+v_height	- Window height in pixles (Y coordinate)
+v_driver	- Index of video driver to use
+v_renderer	- Index of render driver to use
 v_fullscreen	- 1 or 0 for fullscreen
 v_grab		- 1 or 0 for grabbing mouse input to not leave the window
 s_volume	- Volume of sound. 0.0 is mute, 1.0 is full volume, there is no enforced volume limit.
@@ -74,8 +74,6 @@ s_freq		- Speed of sound playback
 s_format	- Bit size of sound samples (8, 16, or 32)
 s_channels	- 1 for mono, 2 for stereo
 s_samples	- Audio buffer size in samples
-
-* - Some variables are platform dependent and will require being set in config.lua
 
 About game.lua:
 ===============
@@ -101,14 +99,14 @@ EVENT_UPDATE:
 EVENT_KEYBOARD:
 	The user has pressed a key from the keyboard.
 	arg1 is the key they pressed (see constants.lua for a list of key constants)
-	arg2 is 1 for pressed or 0 for released.
+	arg2 is PRESSED for pressed or RELEASED for released.
 
 EVENT_MOUSEBUTTON:
 	The user has clicked with their mouse.
 	arg1 is the x coordinate of the mouse.
 	arg2 is the y coordinate of the mouse.
 	arg3 is the BUTTON_LEFT, BUTTON_MIDDLE, or BUTTON_RIGHT.
-	arg4 is 1 for pressed or 0 for released.
+	arg4 is PRESSED for pressed or RELEASED for released.
 
 EVENT_SHUTDOWN:
 	The game is shutting down. The Lua game should free any handles it has opened.
