@@ -30,6 +30,7 @@
 
 #define MAX_PATH		256
 #define MAX_STRING		32000
+#define MAX_FILE		(4*1024*1024)
 
 #define ERROR(F, ...)	do { \
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", va((F), ##__VA_ARGS__), NULL);	\

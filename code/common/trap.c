@@ -424,6 +424,47 @@ int	trap_GetTicks(lua_State *s)
 	return 1;
 }
 
+char	*load_file(const char *path)
+{
+	FILE *f;
+	static char data[MAX_FILE];
+	size_t n;
+
+	f = fopen(path, "rb");
+	n = fread(data, 1, MAX_FILE, f);
+	fclose(f);
+
+	data[n] = 0;
+	return data;
+}
+
+int	trap_LoadGameFile(lua_State *s)
+{
+	const char *path;
+
+	trap_args(s, "LoadGameFile", "s", &path);
+	lua_pushstring(s, load_file(gamepath(path)));
+	return 1;
+}
+
+int	trap_LoadDataFile(lua_State *s)
+{
+	const char *path;
+		
+	trap_args(s, "LoadDataFile", "s", &path);
+	lua_pushstring(s, load_file(datapath(path)));
+	return 1;
+}
+
+int	trap_MessageBox(lua_State *s)
+{
+	const char *msg;
+	extern SDL_Window *v_window;
+
+	trap_args(s, "MessageBox", "s", &msg);
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "", msg, v_window);
+	return 0;
+}
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -470,6 +511,11 @@ trap_t syscalls[] = {
 	{ "StopSound", trap_StopSound },
 
 	{ "GetTicks", trap_GetTicks },
+
+	{ "LoadGameFile", trap_LoadGameFile },
+	{ "LoadDataFile", trap_LoadDataFile },
+	
+	{ "MessageBox", trap_MessageBox },
 
 	{ NULL, NULL }
 };
