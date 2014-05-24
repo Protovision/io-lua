@@ -244,7 +244,8 @@ char	*pathjoin(const char *base, const char *path);
 #define gamepath(p)	(pathjoin(c_gamepath->string, (p)))
 #define datapath(p)	(pathjoin(c_datapath->string, (p)))
 
-
+void	sys_copy(const char *from, const char *to);
+int	sys_exists(const char *path);
 
 extern	char *_basepath;
 extern	const char *platform;

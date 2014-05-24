@@ -537,6 +537,15 @@ int	trap_SaveDataFile(lua_State *s)
 	return 0;
 }
 
+int	trap_CheckDataFile(lua_State *s)
+{
+	const char *path;
+
+	trap_args(s, "CheckDataFile", "s", &path);
+	lua_pushinteger(s, sys_exists(datapath(path)));
+	return 1;
+}
+
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -602,6 +611,8 @@ trap_t syscalls[] = {
 	{ "SaveDataFile", trap_SaveDataFile },
 
 	{ "TellFile", trap_TellFile },
+
+	{ "CheckDataFile", trap_CheckDataFile },
 
 	{ NULL, NULL }
 };

@@ -285,3 +285,6 @@ SaveDataFile(file, data, len)
 
 TellFile(handle)
 	Returns the current offset of the file opened with OpenFile
+
+CheckDataFile(file)
+	Checks if the file exists relative to datapath
