@@ -244,4 +244,15 @@ StopSound(channel)
 
 GetTicks()
 	Returns the number of clock ticks since the game started running.
-	
+
+LoadGameFile(file)
+	Loads the contents of a file into a string.
+	The filename is relative to gamepath.
+
+LoadDataFile(file)
+	Loads the contents of a file into a string.
+	The filename is relative to datapath.
+
+MessageBox(text)
+	Displays a message box in the game window.
+
