@@ -542,7 +542,7 @@ int	trap_CheckDataFile(lua_State *s)
 	const char *path;
 
 	trap_args(s, "CheckDataFile", "s", &path);
-	lua_pushinteger(s, sys_exists(datapath(path)));
+	lua_pushboolean(s, sys_exists(datapath(path)));
 	return 1;
 }
 
