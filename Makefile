@@ -46,7 +46,7 @@ clean:
 	
 makedirs:
 	if [ ! -d $(BUILD_DIR)/obj ]; then mkdir -p $(BUILD_DIR)/obj; fi
-	rm -rf $(BUILD_DIR)/game
-	cp -R game $(BUILD_DIR)
-	cp constants.lua $(BUILD_DIR)
+	cp -uR game $(BUILD_DIR)
+	cp -u constants.lua $(BUILD_DIR)
+	cp -u windows/libs/*.dll $(BUILD_DIR)
 
