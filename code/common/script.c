@@ -49,13 +49,17 @@ void	script_call(const char *func, const char *fmt, ...)
 	va_list v;
 
 	if (func == NULL) {
-		lua_call(lua, 0, 0);
+		if (lua_pcall(lua, 0, 0, 0) != 0) {
+			ERROR(lua_tostring(lua, -1));
+		}
 		return;
 	}
 
 	lua_getglobal(lua, func);
 	if (fmt == NULL) {
-		lua_call(lua, 0, 0);
+		if (lua_pcall(lua, 0, 0, 0) != 0) {
+			ERROR(lua_tostring(lua, -1));
+		}
 		return;
 	}
 	va_start(v, fmt);
@@ -79,5 +83,7 @@ void	script_call(const char *func, const char *fmt, ...)
 		}
 	}
 	va_end(v);
-	lua_call(lua, i, 0);
+	if (lua_pcall(lua, i, 0, 0) != 0) {
+		ERROR(lua_tostring(lua, -1));
+	}
 }
