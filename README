@@ -133,12 +133,8 @@ LoadFont(filename)
 	Loads a font from a file relative to gamepath.
 	Returns a handle to that font
 
-LoadImage(filename, w, h)
+LoadImage(filename)
 	Loads a jpg or png image from a file relative gamepath.
-	w and h are the width and height to scale the image to; if set to
-	zero, this function will load the image to it's original width and
-	height. 
-
 	Returns a handle to that image
 
 DrawText(x, y, text, font, color)
@@ -152,9 +148,10 @@ DrawBackground(image)
 	Draws an image to stretch as the background of the window.
 	image is a handle to an image loaded with LoadImage.
 
-DrawImage(x, y, image)
-	Draws an image at the specified location in the window
-	image is a handle to an image loaded with LoadImage
+DrawImage(x, y, image, w, h)
+	Draws an image at the specified location in the window.
+	w and h are optional arguments to set the width and height 
+	to scale the image to. image is a handle to an image loaded with LoadImage
 
 Quit()
 	Sends the EVENT_SHUTDOWN event to the game and then exits the game
