@@ -466,6 +466,25 @@ int	trap_MessageBox(lua_State *s)
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "", msg, v_window);
 	return 0;
 }
+
+int	trap_PauseAudio(lua_State *s)
+{
+	audio_pause();
+	return 0;
+}
+
+int	trap_ResumeAudio(lua_State *s)
+{
+	audio_resume();
+	return 0;
+}
+
+int	trap_StopAudio(lua_State *s)
+{
+	audio_stop();
+	return 0;
+}
+
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -517,6 +536,10 @@ trap_t syscalls[] = {
 	{ "LoadDataFile", trap_LoadDataFile },
 	
 	{ "MessageBox", trap_MessageBox },
+
+	{ "PauseAudio", trap_PauseAudio },
+	{ "ResumeAudio", trap_ResumeAudio },
+	{ "StopAudio", trap_StopAudio },
 
 	{ NULL, NULL }
 };

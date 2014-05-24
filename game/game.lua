@@ -26,8 +26,8 @@ function main(event, arg1, arg2, arg3, arg4)
 	elseif event == EVENT_KEYBOARD then
 
 		if arg1 == KEY_Q then Quit() 
-		elseif arg1 == KEY_P then PauseSound(channel) 
-		elseif arg1 == KEY_R then ResumeSound(channel) end
+		elseif arg1 == KEY_P then PauseAudio() 
+		elseif arg1 == KEY_R then ResumeAudio() end
 	end
 
 end

@@ -256,3 +256,13 @@ LoadDataFile(file)
 MessageBox(text)
 	Displays a message box in the game window.
 
+PauseAudio()
+	Pauses audio.
+
+ResumeAudio()
+	Resumes audio. Sound channels paused with PauseSound will still be paused.
+
+StopAudio()
+	Stops all sound channels from playing.
+
+
