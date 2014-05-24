@@ -524,12 +524,13 @@ int	trap_SaveDataFile(lua_State *s)
 {
 	FILE *f;
 	int len;
-	const char *path, *data;
+	const char *path, *data, *fullpath;
 
 	trap_args(s, "SaveDataFile", "ssi", &path, &data, &len);
 
-	f = fopen(datapath(path), "wb");
-	if (f == NULL) ERROR("Failed to write to data file: %s", path);
+	fullpath = datapath(path);
+	f = fopen(fullpath, "wb");
+	if (f == NULL) ERROR("Failed to write to data file: %s", fullpath);
 	if (len == 0) len = strlen(data);
 	fwrite(data, 1, len, f);
 	fclose(f);
