@@ -316,7 +316,7 @@ int	trap_MakeDirectory(lua_State *s)
 	const char *dir;
 
 	trap_args(s, "MakeDirectory", "s", &dir);
-	if (MKDIR(datapath(dir), 0666) < 0) {
+	if (MKDIR(datapath(dir), 0777) < 0) {
 		lua_pushnil(s);
 		return 1;
 	}
