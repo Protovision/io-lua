@@ -45,13 +45,13 @@ void	video_init()
 
 	if (!SDL_WasInit(SDL_INIT_VIDEO)) {
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO)) {
-			ERROR("Failed to initialize video: %s", SDL_GetError());
+			ERROR(SDL_GetError());
 		}
 	}
 
 	driver_name = SDL_GetVideoDriver(v_driver->integer);
 	if (SDL_VideoInit(driver_name)) {
-		ERROR("Failed to initialize video driver: %s", SDL_GetError());
+		ERROR(SDL_GetError());
 	}
 
 	v_window = SDL_CreateWindow(

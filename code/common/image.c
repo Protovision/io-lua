@@ -10,7 +10,7 @@ SDL_Texture	*image_load(const char *file, int w, int h)
 
 	surface = IMG_Load(file);
 	if (surface == NULL) {
-		ERROR("Failed to load image: %s\n%s", file, IMG_GetError());
+		ERROR(IMG_GetError());
 	}
 
 	if (w && h) {
@@ -27,7 +27,7 @@ SDL_Texture	*image_load(const char *file, int w, int h)
 	
 	texture = SDL_CreateTextureFromSurface(v_renderer, surface);
 	if (texture == NULL) {
-		ERROR("Failed to create texture from image: %s\n%s", file, SDL_GetError());
+		ERROR(SDL_GetError());
 	}
 	SDL_FreeSurface(surface);
 

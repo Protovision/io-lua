@@ -34,7 +34,7 @@ void	script_shutdown()
 void	script_load(const char *luafile)
 {
 	if (luaL_dofile(lua, luafile)) {
-		ERROR("Failed to load Lua script: %s", lua_tostring(lua, -1));
+		ERROR(lua_tostring(lua, -1));
 	}
 }
 
