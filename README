@@ -278,3 +278,7 @@ MuteAudio()
 
 UnmuteAudio()
 	Unmutes the audio.
+
+SaveDataFile(file, data, len)
+	Writes the string data out to a file relative to datapath.
+	len is optional, specifying the number of characters to write.

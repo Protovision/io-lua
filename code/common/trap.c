@@ -512,6 +512,23 @@ int	trap_UnmuteAudio(lua_State *s)
 	return 0;
 }
 
+int	trap_SaveDataFile(lua_State *s)
+{
+	FILE *f;
+	int len;
+	const char *path, *data;
+
+	trap_args(s, "SaveDataFile", "ssi", &path, &data, &len);
+
+	f = fopen(datapath(path), "wb");
+	if (f == NULL) ERROR("Failed to write to data file: %s", path);
+	if (len == 0) len = strlen(data);
+	fwrite(data, 1, len, f);
+	fclose(f);
+
+	return 0;
+}
+
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -573,6 +590,8 @@ trap_t syscalls[] = {
 
 	{ "MuteAudio", trap_MuteAudio },
 	{ "UnmuteAudio", trap_UnmuteAudio },
+
+	{ "SaveDataFile", trap_SaveDataFile },
 
 	{ NULL, NULL }
 };
