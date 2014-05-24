@@ -31,6 +31,8 @@ SDL_Texture	*image_load(const char *file, int w, int h)
 	}
 	SDL_FreeSurface(surface);
 
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
 	return texture;	
 }
 
