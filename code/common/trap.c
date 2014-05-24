@@ -261,11 +261,19 @@ int	trap_SeekFile(lua_State *s)
 	}
 
 	if (fseek(f, offset, whence2) < 0) {
-		lua_pushnil(s);
-		return 1;
+		ERROR("Failed to seek file")
 	}
 	lua_pushinteger(s, ftell(f));
 	return 1;		
+}
+
+int	trap_TellFile(lua_State *s)
+{
+	FILE *f;
+
+	trap_args(s, "TellFile", "p", &f);
+	lua_pushinteger(s, ftell(f));
+	return 1;
 }
 
 int	trap_CloseFile(lua_State *s)
@@ -592,6 +600,8 @@ trap_t syscalls[] = {
 	{ "UnmuteAudio", trap_UnmuteAudio },
 
 	{ "SaveDataFile", trap_SaveDataFile },
+
+	{ "TellFile", trap_TellFile },
 
 	{ NULL, NULL }
 };

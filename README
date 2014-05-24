@@ -193,7 +193,7 @@ SeekFile(file, offset, whence)
 	Seeks the file position in the file handle.
 	offset is the number of characters to seek.
 	whence is SEEK_SET, SEEK_CUR, or SEEK_END.
-	Returns the resulting file offset or nil on error.
+	Returns the resulting file offset
 
 CloseFile(file)
 	Closes a file handle
@@ -282,3 +282,6 @@ UnmuteAudio()
 SaveDataFile(file, data, len)
 	Writes the string data out to a file relative to datapath.
 	len is optional, specifying the number of characters to write.
+
+TellFile(handle)
+	Returns the current offset of the file opened with OpenFile
