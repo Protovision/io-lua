@@ -1,6 +1,6 @@
 #include "audio.h"
 
-var_t			*s_driver, *s_device, *s_freq, *s_format, *s_channels, *s_samples, *s_volume;
+var_t			*s_driver, *s_device, *s_freq, *s_format, *s_channels, *s_samples, *s_volume, *s_mute;
 SDL_AudioDeviceID	dev;
 
 SDL_AudioSpec audio_spec;
@@ -12,12 +12,13 @@ gameVar_t sound_vars[] = {
 	{ &s_channels, "s_channels", "2" },
 	{ &s_samples, "s_samples", "512" },
 	{ &s_volume, "s_volume", "1.0" },
+	{ &s_mute, "s_mute", "0" },
 	{ NULL, NULL, NULL }
 };
 
 void	audio_init()
 {
-	const char *device, *driver, *s;
+	const char *device, *driver;
 	SDL_AudioSpec desired;
 	
 	extern void audio_callback(void *, Uint8 *, int);
@@ -103,4 +104,33 @@ void	audio_stop()
 	audio_lock();
 	channel_clear();
 	audio_unlock();	
+}
+
+void	audio_set_volume(int vol)
+{
+	float real_volume;
+
+	real_volume = (float)vol / 100.0f;
+	audio_lock();
+	var_set("s_volume", va("%f", real_volume));
+	audio_unlock();
+}
+
+int	audio_get_volume()
+{
+	return (int)(s_volume->real * 100);
+}
+
+void	audio_mute()
+{
+	audio_lock();
+	var_set("s_mute", "1");
+	audio_unlock();
+}
+
+void	audio_unmute()
+{
+	audio_lock();
+	var_set("s_mute", "0");
+	audio_unlock();
 }

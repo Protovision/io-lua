@@ -9,6 +9,10 @@ void	audio_shutdown();
 void	audio_pause();
 void	audio_resume();
 void	audio_stop();
+int	audio_get_volume();
+void	audio_set_volume(int vol);
+void	audio_mute();
+void	audio_unmute();
 
 struct sound_s {
 	Uint8		*buf;

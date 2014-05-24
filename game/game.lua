@@ -27,7 +27,12 @@ function main(event, arg1, arg2, arg3, arg4)
 
 		if arg1 == KEY_Q then Quit() 
 		elseif arg1 == KEY_P then PauseAudio() 
-		elseif arg1 == KEY_R then ResumeAudio() end
+		elseif arg1 == KEY_R then ResumeAudio()
+		elseif arg1 == KEY_UP then SetVolume(GetVolume() + 20)
+		elseif arg1 == KEY_DOWN then SetVolume(GetVolume() - 20)
+		elseif arg1 == KEY_M then MuteAudio()
+		elseif arg1 == KEY_U then UnmuteAudio()
+		end
 	end
 
 end

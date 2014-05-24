@@ -265,4 +265,16 @@ ResumeAudio()
 StopAudio()
 	Stops all sound channels from playing.
 
+GetVolume()
+	Returns the value of the current volume as an integer.
 
+SetVolume(vol)
+	Sets the volume from an integer.
+	If set to 0, the audio will be silent.
+	100 is the normal volume but can be set higher for louder audio.
+
+MuteAudio()
+	Mutes the audio.
+
+UnmuteAudio()
+	Unmutes the audio.

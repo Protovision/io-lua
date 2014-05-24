@@ -229,8 +229,8 @@ void	sound_stop(channel_t *c)
 void	audio_callback(void *cookie, Uint8 *stream, int len)
 {
 	int i, n;
-	extern var_t *s_volume;
-	
+	extern var_t *s_volume, *s_mute;
+
 	memset(stream, audio_spec.silence, len);
 
 	if (audio_spec.format == AUDIO_U8) {
@@ -238,7 +238,10 @@ void	audio_callback(void *cookie, Uint8 *stream, int len)
 			if (channels[i].sound == NULL) continue;
 			if (channels[i].flags & CHANNEL_PAUSED) continue;
 			for (n = 0; n < len; ++n) {
-				stream[n] += channels[i].sound->buf[channels[i].offset++] * s_volume->real;
+				if (s_mute->integer == 0) {
+					stream[n] += channels[i].sound->buf[channels[i].offset] * s_volume->real;
+				}
+				++channels[i].offset;
 				if (channels[i].offset >= channels[i].sound->len) {
 					if (channels[i].flags & CHANNEL_LOOP) {
 						channels[i].offset = 0;
@@ -254,7 +257,10 @@ void	audio_callback(void *cookie, Uint8 *stream, int len)
 			if (channels[i].sound == NULL) continue;
 			if (channels[i].flags & CHANNEL_PAUSED) continue;
 			for (n = 0; n < len; ++n) {
-				((Sint16*)stream)[n] += ((Sint16*)channels[i].sound->buf)[channels[i].offset++] * s_volume->real;
+				if (s_mute->integer == 0) {
+					((Sint16*)stream)[n] += ((Sint16*)channels[i].sound->buf)[channels[i].offset] * s_volume->real;
+				}
+				++channels[i].offset;
 				if (channels[i].offset >= channels[i].sound->len) {
 					if (channels[i].flags & CHANNEL_LOOP) {
 						channels[i].offset = 0;
@@ -270,7 +276,10 @@ void	audio_callback(void *cookie, Uint8 *stream, int len)
 			if (channels[i].sound == NULL) continue;
 			if (channels[i].flags & CHANNEL_PAUSED) continue;
 			for (n = 0; n < len; ++n) {
-				((Sint32*)stream)[n] += ((Sint32*)channels[i].sound->buf)[channels[i].offset++] * s_volume->real;
+				if (s_mute->integer == 0) {
+					((Sint32*)stream)[n] += ((Sint32*)channels[i].sound->buf)[channels[i].offset] * s_volume->real;
+				}
+				++channels[i].offset;
 				if (channels[i].offset >= channels[i].sound->len) {
 					if (channels[i].flags & CHANNEL_LOOP) {
 						channels[i].offset = 0;

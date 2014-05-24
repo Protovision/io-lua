@@ -485,6 +485,33 @@ int	trap_StopAudio(lua_State *s)
 	return 0;
 }
 
+int	trap_SetVolume(lua_State *s)
+{
+	int vol;
+
+	trap_args(s, "SetVolume", "i", &vol);
+	audio_set_volume(vol);
+	return 0;
+}
+
+int	trap_GetVolume(lua_State *s)
+{
+	lua_pushinteger(s, audio_get_volume());
+	return 1;
+}
+
+int	trap_MuteAudio(lua_State *s)
+{
+	audio_mute();
+	return 0;
+}
+
+int	trap_UnmuteAudio(lua_State *s)
+{
+	audio_unmute();
+	return 0;
+}
+
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -540,6 +567,12 @@ trap_t syscalls[] = {
 	{ "PauseAudio", trap_PauseAudio },
 	{ "ResumeAudio", trap_ResumeAudio },
 	{ "StopAudio", trap_StopAudio },
+
+	{ "GetVolume", trap_GetVolume },
+	{ "SetVolume", trap_SetVolume },
+
+	{ "MuteAudio", trap_MuteAudio },
+	{ "UnmuteAudio", trap_UnmuteAudio },
 
 	{ NULL, NULL }
 };
