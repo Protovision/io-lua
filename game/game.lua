@@ -5,6 +5,9 @@ function main(event, arg1, arg2, arg3, arg4)
 
 	if event == EVENT_INIT then
 
+		data = LoadGameFile("test.txt")
+		SaveDataFile("test.txt", data)
+
 		sound = LoadSound("AgoraCastleIntro.wav")
 		channel = LoopSound(sound)
 
