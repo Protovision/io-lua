@@ -245,4 +245,6 @@ ResumeSound(channel)
 StopSound(channel)
 	Stops playing a sound channel
 
+GetTicks()
+	Returns the number of clock ticks since the game started running.
 	
