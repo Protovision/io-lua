@@ -24,14 +24,12 @@ SDL_Texture	*image_load(const char *file, int w, int h)
 		surface = scaled;
 		SDL_FreeSurface(s);	
 	} 
-	
+
 	texture = SDL_CreateTextureFromSurface(v_renderer, surface);
 	if (texture == NULL) {
 		ERROR(SDL_GetError());
 	}
 	SDL_FreeSurface(surface);
-
-	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
 	return texture;	
 }
