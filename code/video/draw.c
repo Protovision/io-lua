@@ -7,14 +7,19 @@ void	video_drawBackground(IMAGE *image)
 	SDL_RenderCopy(v_renderer, image, NULL, NULL);
 }
 
-void	video_drawImage(int x, int y, IMAGE *image)
+void	video_drawImage(int x, int y, IMAGE *image, int w, int h)
 {
 	SDL_Rect r;
 	extern SDL_Renderer *v_renderer;
 
 	r.x = x;
 	r.y = y;
-	SDL_QueryTexture(image, NULL, NULL, &r.w, &r.h);
+	if (w && h) {
+		r.w = w;
+		r.h = h;
+	} else {
+		SDL_QueryTexture(image, NULL, NULL, &r.w, &r.h);
+	}
 	SDL_RenderCopy(v_renderer, image, NULL, &r);	
 }
 

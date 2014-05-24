@@ -84,11 +84,11 @@ int	trap_LoadFont(lua_State *s)
 int	trap_LoadImage(lua_State *s)
 {
 	IMAGE *image;
-	int w, h;
+	//int w, h;
 	const char *imgfile;
 	
-	trap_args(s, "LoadImage", "sii", &imgfile, &w, &h);
-	image = image_load(gamepath(imgfile), w, h);
+	trap_args(s, "LoadImage", "s", &imgfile);//, &w, &h);
+	image = image_load(gamepath(imgfile));//, w, h);
 	if (image == NULL) {
 		lua_pushnil(s);
 		return 1;
@@ -145,10 +145,10 @@ int	trap_FreeImage(lua_State *s)
 int	trap_DrawImage(lua_State *s)
 {
 	IMAGE *image;
-	int x, y;
+	int x, y, w, h;
 	
-	trap_args(s, "DrawImage", "iip", &x, &y, &image);
-	video_drawImage(x, y, image);
+	trap_args(s, "DrawImage", "iipii", &x, &y, &image, &w, &h);
+	video_drawImage(x, y, image, w, h);
 	return 0;
 }
 

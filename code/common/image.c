@@ -1,18 +1,18 @@
 #include "common.h"
 #include "video/video.h"
 
-SDL_Texture	*image_load(const char *file, int w, int h)
+SDL_Texture	*image_load(const char *file) //, int w, int h)
 {
 	SDL_Texture *texture;
-	SDL_Surface *surface, *scaled, *s;
-	SDL_Rect r;
+	SDL_Surface *surface;//, *scaled, *s;
+	//SDL_Rect r;
 	extern SDL_Renderer *v_renderer;
 
 	surface = IMG_Load(file);
 	if (surface == NULL) {
 		ERROR(IMG_GetError());
 	}
-
+/*
 	if (w && h) {
 		r.x = 0;
 		r.y = 0;
@@ -24,7 +24,7 @@ SDL_Texture	*image_load(const char *file, int w, int h)
 		surface = scaled;
 		SDL_FreeSurface(s);	
 	} 
-
+*/
 	texture = SDL_CreateTextureFromSurface(v_renderer, surface);
 	if (texture == NULL) {
 		ERROR(SDL_GetError());
