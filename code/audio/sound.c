@@ -144,7 +144,7 @@ sound_t	*sound_load(const char *file)
 
 	wav_spec = audio_spec;
 	if (SDL_LoadWAV(file, &wav_spec, &s->buf, &s->len) == NULL)
-		ERROR("Error loading sound: %s", file);
+		ERROR(SDL_GetError());
 
 	switch (audio_spec.format) {
 	case AUDIO_U8:

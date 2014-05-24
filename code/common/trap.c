@@ -431,6 +431,7 @@ char	*load_file(const char *path)
 	size_t n;
 
 	f = fopen(path, "rb");
+	if (f == NULL) ERROR("Could not open file: %s", path);
 	n = fread(data, 1, MAX_FILE, f);
 	fclose(f);
 
