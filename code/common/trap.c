@@ -631,6 +631,15 @@ int	trap_ReadDirectory(lua_State *s)
 	return 1;
 }
 
+int	trap_Basepath(lua_State *s)
+{
+	const char *path;
+
+	trap_args(s, "Basepath", "s", &path);
+	lua_pushstring(s, basepath(path));
+	return 1;
+}
+
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -704,6 +713,8 @@ trap_t syscalls[] = {
 	{ "IsFile", trap_IsFile },
 	{ "IsDirectory", trap_IsDirectory },
 	{ "ReadDirectory", trap_ReadDirectory },
+
+	{ "Basepath", trap_Basepath },
 	
 	{ NULL, NULL }
 };
