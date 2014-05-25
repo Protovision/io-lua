@@ -18,9 +18,12 @@ void	update()
 		script_call("main", "iiiii", EVENT_MOUSEBUTTON,
 			ev.button.x, ev.button.y, ev.button.button, ev.button.pressed);	
 		break;
+
+#if ENABLE_EVENT_MOUSEWHEEL == 1
 	case EVENT_MOUSEWHEEL:
 		script_call("main", "ii", EVENT_MOUSEWHEEL, ev.scroll.dir);
 		break;
+#endif
 
 #if ENABLE_EVENT_MOUSEMOVE == 1
 	case EVENT_MOUSEMOVE:

@@ -30,12 +30,13 @@ void	input()
 			ev.button.y = e.button.y;
 			event_push(&ev);
 			break;
-
+#if ENABLE_EVENT_MOUSEWHEEL == 1
 		case SDL_MOUSEWHEEL:
 			ev.type = EVENT_MOUSEWHEEL;
 			ev.scroll.dir = (e.wheel.y ? SCROLL_UP : SCROLL_DOWN);
 			event_push(&ev);
 			break;
+#endif
 
 #if ENABLE_EVENT_MOUSEMOVE == 1
 		case SDL_MOUSEMOTION:
