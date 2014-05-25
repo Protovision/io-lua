@@ -42,7 +42,7 @@ void	*mem_alloc(size_t size)
 	}
 
 	if (ptr == NULL) {
-		ERROR("Out of game memory", size);
+		FATAL("Out of game memory", size);
 	}
 	return ptr;
 }
@@ -67,7 +67,7 @@ void	*mem_realloc(void *ptr, size_t size)
 			((size_t*)ptr)[-1] = size;
 			return ptr;
 		} else {
-			ERROR("Out of game memory", size);
+			FATAL("Out of game memory", size);
 		}
 	}
 

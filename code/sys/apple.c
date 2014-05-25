@@ -1,15 +1,10 @@
 #ifdef __APPLE__
 
+#include "common/common.h"
+
 #include <TargetConditionals.h>
 
-#include <unistd.h>
 #include <copyfile.h>
-#include <sys/stat.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
 
 #if  TARGET_OS_IPHONE == 1
 
@@ -77,6 +72,22 @@ int	sys_exists(const char *path)
 	struct stat st;
 
 	return stat(path, &st) == 0;
+}
+
+int	sys_isfile(const char *path)
+{
+	struct stat st;
+
+	if (stat(path, &st)) return 0;
+	return (st.st_mode & S_IFREG);
+}
+
+int	sys_isdir(const char *path)
+{
+	struct stat st;
+
+	if (stat(path, &st)) return 0;
+	return (st.st_mode & S_IFDIR);
 }
 
 #endif

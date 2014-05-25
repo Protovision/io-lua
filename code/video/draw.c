@@ -33,12 +33,12 @@ void	video_drawText(int x, int y, const char *text, FONT *font, unsigned int col
 	color = hton32(color);
 	surface = TTF_RenderText_Blended(font, text, *(SDL_Color*)&color);
 	if (surface == NULL) {
-		ERROR(TTF_GetError());
+		FATAL(TTF_GetError());
 	}
 
 	texture = SDL_CreateTextureFromSurface(v_renderer, surface);
 	if (texture == NULL) {
-		ERROR(SDL_GetError());
+		FATAL(SDL_GetError());
 	}
 
 	SDL_FreeSurface(surface);

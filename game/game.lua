@@ -5,6 +5,11 @@ function main(event, arg1, arg2, arg3, arg4)
 
 	if event == EVENT_INIT then
 
+		files = ReadDirectory(Gamepath("."))
+		for k, v in pairs(files) do
+			print(k .. ": " .. v)
+		end
+
 		sound = LoadSound("AgoraCastleIntro.wav")
 		channel = LoopSound(sound)
 

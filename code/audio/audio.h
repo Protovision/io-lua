@@ -17,7 +17,7 @@ void	audio_unmute();
 struct sound_s {
 	Uint8		*buf;
 	Uint32		len;
-	char		path[MAX_PATH];
+	char		path[MAX_PATHNAME];
 	struct sound_s	*next;	
 };
 

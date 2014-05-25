@@ -35,7 +35,7 @@ void	audio_init()
 
 	if (!SDL_WasInit(SDL_INIT_AUDIO)) {
 		if (SDL_InitSubSystem(SDL_INIT_AUDIO))
-			ERROR("Failed to initialize audio: %s", SDL_GetError());
+			FATAL("Failed to initialize audio: %s", SDL_GetError());
 	}
 
 	sound_init();
@@ -44,7 +44,7 @@ void	audio_init()
 	driver = SDL_GetAudioDriver(s_driver->integer);
 
 	if (SDL_AudioInit(driver))
-		ERROR("Failed to initialize audio driver: %s", SDL_GetError());
+		FATAL("Failed to initialize audio driver: %s", SDL_GetError());
 
 	memset(&desired, 0, sizeof(desired));
 	desired.freq = s_freq->integer;
@@ -59,7 +59,7 @@ void	audio_init()
 
 	dev = SDL_OpenAudioDevice(device, 0, &desired, &audio_spec, SDL_AUDIO_ALLOW_ANY_CHANGE);
 	if (dev == 0)
-		ERROR("Failed to open audio device: %s", SDL_GetError());	
+		FATAL("Failed to open audio device: %s", SDL_GetError());	
 
 	
 	SDL_PauseAudioDevice(dev, 0);

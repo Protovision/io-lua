@@ -98,7 +98,7 @@ static sound_t	*sound_alloc(const char *file)
 	}
 	
 	if (i == MAX_SOUNDS) {
-		ERROR("Maximum number of loaded sounds exceeded");
+		FATAL("Maximum number of loaded sounds exceeded");
 	}
 
 	s = &sounds[i];
@@ -144,7 +144,7 @@ sound_t	*sound_load(const char *file)
 
 	wav_spec = audio_spec;
 	if (SDL_LoadWAV(file, &wav_spec, &s->buf, &s->len) == NULL)
-		ERROR(SDL_GetError());
+		FATAL(SDL_GetError());
 
 	switch (audio_spec.format) {
 	case AUDIO_U8:

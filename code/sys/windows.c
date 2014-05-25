@@ -1,8 +1,6 @@
 #ifdef _WINDOWS
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <stdlib.h>
+#include "common/common.h"
 
 void	sys_copy(const char *from, const char *to)
 {
@@ -37,17 +35,67 @@ void	sys_copy(const char *from, const char *to)
 	system(cmd);
 }
 
-int	sys_exists(const char *file)
+char	*convert_path(const char *path)
 {
-	static char path[256];
+	static char realpath[MAX_PATHNAME];
 	int i;
 
-	for (i = 0; file[i] != 0; ++i) {
-		if (file[i] == '/') path[i] = '\\';
-		else path[i] = file[i];
+	for (i = 0; path[i] != 0; ++i) {
+		if (path[i] == '/') realpath[i] = '\\';
+		else realpath[i] = path[i];
 	}
-	path[i] = 0;
-	return GetFileAttributesA(path) != INVALID_FILE_ATTRIBUTES;
+	realpath[i] = 0;
+	return realpath;	
+}
+
+int	sys_exists(const char *file)
+{
+	return GetFileAttributesA(file) != INVALID_FILE_ATTRIBUTES;
+}
+
+int	sys_isfile(const char *file)
+{
+	return GetFileAttributesA(file) & FILE_ATTRIBUTE_NORMAL;
+}
+
+int	sys_isdir(const char *file)
+{
+	return GetFileAttributesA(file) & FILE_ATTRIBUTE_DIRECTORY;
+}
+
+directory_t	*win_opendir(const char *path)
+{
+	static int i = 0;
+	static directory_t dir[2];
+	directory_t *d;
+
+	d = &dir[i & 1];
+	++i;
+
+	d->dirh = FindFirstFileA(va("%s\\*", path), &d->data);
+	if (d->dirh == INVALID_HANDLE_VALUE) return NULL;
+	d->first_time = 1;
+
+	return d;
+}
+
+direntry_t	*win_readdir(directory_t *dir)
+{
+	if (dir->first_time) {
+		dir->first_time = 0;
+		return &dir->data;
+	}
+	
+	if (FindNextFileA(dir->dirh, &dir->data) == 0) {
+		return NULL;
+	}
+
+	return &dir->data;	
+}
+
+void	win_closedir(directory_t *dir)
+{
+	FindClose(dir->dirh);
 }
 
 #endif

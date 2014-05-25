@@ -1,9 +1,6 @@
 #ifdef __linux__
 
-#include <unistd.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include "common/common.h"
 
 void	sys_copy(const char *from, const char *to)
 {
@@ -28,6 +25,22 @@ int	sys_exists(const char *file)
 	struct stat st;
 	
 	return stat(file, &st) == 0;
+}
+
+int	sys_isfile(const char *file)
+{
+	struct stat st;
+
+	if (stat(file, &st)) return 0;
+	return S_ISREG(st.st_mode);
+}
+
+int	sys_isdir(const char *file)
+{
+	struct stat st;
+
+	if (stat(file, &st)) return 0;
+	return S_ISDIR(st.st_mode);
 }
 
 #endif

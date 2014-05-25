@@ -24,7 +24,7 @@ char	*pathjoin(const char *base, const char *p)
 	char *s, *path;
 
 	static int index = 0;
-	static char buf[2][MAX_PATH];
+	static char buf[2][MAX_PATHNAME];
 
 	path = buf[index & 1];
 	++index;

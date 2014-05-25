@@ -1,7 +1,7 @@
 #include "common.h"
 
-#define	EVENT_MAX	256
-static event_t		events[EVENT_MAX];
+#define	_EVENT_MAX	256
+static event_t		events[_EVENT_MAX];
 static event_t		*event_first;
 static event_t		*event_last;
 
@@ -18,7 +18,7 @@ void	event_shutdown()
 
 void	event_push(event_t *ev)
 {
-	if (event_last == (events+EVENT_MAX) ) {
+	if (event_last == (events+_EVENT_MAX) ) {
 		event_last = events;
 	}
 
@@ -32,7 +32,7 @@ void	event_pull(event_t *ev)
 		return;
 	}
 
-	if (event_first == (events+EVENT_MAX) ) {
+	if (event_first == (events+_EVENT_MAX) ) {
 		event_first = events;
 	}
 	

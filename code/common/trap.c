@@ -36,7 +36,7 @@ void	trap_args(lua_State *s, const char *funcname, const char *fmt, ...)
 	if (*fmt) {
 		luaL_where(s, 1);
 		where = lua_tostring(s, -1);
-		ERROR("%s Invalid call to %s", where, funcname);
+		FATAL("%s Invalid call to %s", where, funcname);
 	}
 	va_end(v);	
 }
@@ -84,11 +84,10 @@ int	trap_LoadFont(lua_State *s)
 int	trap_LoadImage(lua_State *s)
 {
 	IMAGE *image;
-	//int w, h;
 	const char *imgfile;
 	
-	trap_args(s, "LoadImage", "s", &imgfile);//, &w, &h);
-	image = image_load(gamepath(imgfile));//, w, h);
+	trap_args(s, "LoadImage", "s", &imgfile);
+	image = image_load(gamepath(imgfile));
 	if (image == NULL) {
 		lua_pushnil(s);
 		return 1;
@@ -205,15 +204,13 @@ int	trap_GetPlatform(lua_State *s)
 
 int	trap_OpenFile(lua_State *s)
 {
-	const char *file, *mode;
+	const char *file, *mode, *fullpath;
 	FILE *fp;
 	
 	trap_args(s, "OpenFile", "ss", &file, &mode);
-	fp = fopen(datapath(file), mode);
-	if (fp == NULL) {
-		lua_pushnil(s);
-		return 1;
-	}
+	fullpath = datapath(file);
+	fp = fopen(fullpath, mode);
+	if (fp == NULL) FATAL("Failed to open file: %s", fullpath);
 	lua_pushlightuserdata(s, fp);
 	return 1;
 }
@@ -231,7 +228,7 @@ int	trap_ReadFile(lua_State *s)
 	if (n) {
 		--n;
 		if (line[n] == '\n' || line[n] == '\r') line[n] = 0;
-		if (line[--n] == '\r') line[n] = 0;
+		if (n != 0 && line[--n] == '\r') line[n] = 0;
 	}
 	lua_pushstring(s, line);
 	return 1;	
@@ -255,13 +252,13 @@ int	trap_SeekFile(lua_State *s)
 
 	trap_args(s, "SeekFile", "pii", &f, &offset, &whence);
 	switch (whence) {
-	case FILE_SET:	whence2 = SEEK_SET; break;
-	case FILE_CUR:	whence2 = SEEK_CUR; break;
-	case FILE_END:	whence2 = SEEK_END; break;
+	case FILESEEK_SET:	whence2 = SEEK_SET; break;
+	case FILESEEK_CUR:	whence2 = SEEK_CUR; break;
+	case FILESEEK_END:	whence2 = SEEK_END; break;
 	}
 
 	if (fseek(f, offset, whence2) < 0) {
-		ERROR("Failed to seek file")
+		FATAL("Failed to seek file")
 	}
 	lua_pushinteger(s, ftell(f));
 	return 1;		
@@ -290,12 +287,12 @@ int	trap_RenameFile(lua_State *s)
 	const char *oldname, *newname;
 
 	trap_args(s, "RenameFile", "ss", &oldname, &newname);
-	if (rename(datapath(oldname), datapath(newname)) < 0) {
-		lua_pushnil(s);
-		return 1;
+	oldname = datapath(oldname);
+	newname = datapath(newname);
+	if (rename(oldname, newname) < 0) {
+		FATAL("Failed to rename file from \"%s\" to \"%s\"", oldname, newname);
 	}
-	lua_pushboolean(s, 1);
-	return 1;
+	return 0;
 }
 
 int	trap_RemoveFile(lua_State *s)
@@ -303,12 +300,11 @@ int	trap_RemoveFile(lua_State *s)
 	const char *file;
 
 	trap_args(s, "RemoveFile", "s", &file);
-	if (remove(datapath(file)) < 0) {
-		lua_pushnil(s);
-		return 1;
+	file = datapath(file);
+	if (remove(file) < 0) {
+		FATAL("Failed to remove file: %s", file);
 	}
-	lua_pushboolean(s, 1);
-	return 1;
+	return 0;
 }
 
 int	trap_MakeDirectory(lua_State *s)
@@ -316,12 +312,11 @@ int	trap_MakeDirectory(lua_State *s)
 	const char *dir;
 
 	trap_args(s, "MakeDirectory", "s", &dir);
-	if (MKDIR(datapath(dir), 0777) < 0) {
-		lua_pushnil(s);
-		return 1;
+	dir = datapath(dir);
+	if (MKDIR(dir)) {
+		FATAL("Failed to make directory: %s", dir);
 	}
-	lua_pushboolean(s, 1);
-	return 1;
+	return 0;
 }
 
 int	trap_RemoveDirectory(lua_State *s)
@@ -329,12 +324,11 @@ int	trap_RemoveDirectory(lua_State *s)
 	const char *dir;
 
 	trap_args(s, "RemoveDirectory", "s", &dir);
-	if (RMDIR(datapath(dir)) < 0) {
-		lua_pushnil(s);
-		return 1;
+	dir = datapath(dir);
+	if (RMDIR(dir) < 0) {
+		FATAL("Failed to remove directory: %s", dir);
 	}
-	lua_pushboolean(s, 1);
-	return 1;
+	return 0;
 }
 
 int	trap_DrawPoint(lua_State *s)
@@ -363,7 +357,6 @@ int	trap_LoadSound(lua_State *s)
 
 	trap_args(s, "LoadSound", "s", &filename);
 	w = sound_load(gamepath(filename));
-	if (w == NULL) return 0;
 	lua_pushlightuserdata(s, w);
 	return 1;
 }
@@ -439,7 +432,7 @@ char	*load_file(const char *path)
 	size_t n;
 
 	f = fopen(path, "rb");
-	if (f == NULL) ERROR("Could not open file: %s", path);
+	if (f == NULL) FATAL("Could not open file: %s", path);
 	n = fread(data, 1, MAX_FILE, f);
 	fclose(f);
 
@@ -447,20 +440,20 @@ char	*load_file(const char *path)
 	return data;
 }
 
-int	trap_LoadGameFile(lua_State *s)
+int	trap_ReadGameFile(lua_State *s)
 {
 	const char *path;
 
-	trap_args(s, "LoadGameFile", "s", &path);
+	trap_args(s, "ReadGameFile", "s", &path);
 	lua_pushstring(s, load_file(gamepath(path)));
 	return 1;
 }
 
-int	trap_LoadDataFile(lua_State *s)
+int	trap_ReadDataFile(lua_State *s)
 {
 	const char *path;
 		
-	trap_args(s, "LoadDataFile", "s", &path);
+	trap_args(s, "ReadDataFile", "s", &path);
 	lua_pushstring(s, load_file(datapath(path)));
 	return 1;
 }
@@ -520,17 +513,17 @@ int	trap_UnmuteAudio(lua_State *s)
 	return 0;
 }
 
-int	trap_SaveDataFile(lua_State *s)
+int	trap_WriteDataFile(lua_State *s)
 {
 	FILE *f;
 	int len;
 	const char *path, *data, *fullpath;
 
-	trap_args(s, "SaveDataFile", "ssi", &path, &data, &len);
+	trap_args(s, "WriteDataFile", "ssi", &path, &data, &len);
 
 	fullpath = datapath(path);
 	f = fopen(fullpath, "wb");
-	if (f == NULL) ERROR("Failed to write to data file: %s", fullpath);
+	if (f == NULL) FATAL("Failed to write to data file: %s", fullpath);
 	if (len == 0) len = strlen(data);
 	fwrite(data, 1, len, f);
 	fclose(f);
@@ -544,6 +537,89 @@ int	trap_CheckDataFile(lua_State *s)
 
 	trap_args(s, "CheckDataFile", "s", &path);
 	lua_pushboolean(s, sys_exists(datapath(path)));
+	return 1;
+}
+
+int	trap_Gamepath(lua_State *s)
+{
+	const char *path;
+
+	trap_args(s, "Gamepath", "s", &path);
+	lua_pushstring(s, gamepath(path));
+	return 1;
+}
+
+int	trap_Datapath(lua_State *s)
+{
+	const char *path;
+
+	trap_args(s, "Datapath", "s", &path);
+	lua_pushstring(s, datapath(path));
+	return 1;
+}
+
+int	trap_AppendDataFile(lua_State *s)
+{
+	FILE *f;
+	int len;
+	const char *path, *fullpath, *data;
+
+	trap_args(s, "AppendDataFile", "ssi", &path, &data, &len);
+	fullpath = datapath(path);
+	f = fopen(fullpath, "ab");
+	if (f == NULL) FATAL("Failed to append to data file: %s", fullpath);
+	if (len == 0) len = strlen(data);
+	fwrite(data, 1, len, f);
+	fclose(f);
+
+	return 0;
+}
+
+int	trap_IsFile(lua_State *s)
+{
+	const char *path;
+
+	trap_args(s, "IsFile", "s", &path);
+	lua_pushboolean(s, sys_isfile(PATH(path)));
+	return 1;
+}
+
+int	trap_IsDirectory(lua_State *s)
+{
+	const char *path;
+
+	trap_args(s, "IsDirectory", "s", &path);
+	lua_pushboolean(s, sys_isdir(PATH(path)));
+	return 1;
+}
+
+int	trap_ReadDirectory(lua_State *s)
+{
+	directory_t *dir;
+	direntry_t *ent;
+	const char *path;
+	int i;
+
+	trap_args(s, "ReadDirectory", "s", &path);
+
+	path = PATH(path);
+	dir = OPENDIR(path);
+	if (dir == NULL) FATAL("Failed to open directory: %s", path);
+
+	lua_newtable(s);
+	i = 1;
+	for (ent = READDIR(dir); ent != NULL; ent = READDIR(dir)) {
+		path = DIRENT_NAME(ent);
+		if (strcmp(path, ".") == 0) continue;
+		if (strcmp(path, "..") == 0) continue;
+
+		lua_pushstring(s, va("%d", i));
+		lua_pushstring(s, DIRENT_NAME(ent));
+		lua_settable(s, -3);	
+		++i;
+	}
+	CLOSEDIR(dir);
+
 	return 1;
 }
 
@@ -594,8 +670,8 @@ trap_t syscalls[] = {
 
 	{ "GetTicks", trap_GetTicks },
 
-	{ "LoadGameFile", trap_LoadGameFile },
-	{ "LoadDataFile", trap_LoadDataFile },
+	{ "ReadGameFile", trap_ReadGameFile },
+	{ "ReadDataFile", trap_ReadDataFile },
 	
 	{ "MessageBox", trap_MessageBox },
 
@@ -609,12 +685,18 @@ trap_t syscalls[] = {
 	{ "MuteAudio", trap_MuteAudio },
 	{ "UnmuteAudio", trap_UnmuteAudio },
 
-	{ "SaveDataFile", trap_SaveDataFile },
+	{ "WriteDataFile", trap_WriteDataFile },
 
 	{ "TellFile", trap_TellFile },
 
 	{ "CheckDataFile", trap_CheckDataFile },
-
+	{ "Gamepath", trap_Gamepath },
+	{ "Datapath", trap_Datapath },
+	{ "AppendDataFile", trap_AppendDataFile },
+	{ "IsFile", trap_IsFile },
+	{ "IsDirectory", trap_IsDirectory },
+	{ "ReadDirectory", trap_ReadDirectory },
+	
 	{ NULL, NULL }
 };
 

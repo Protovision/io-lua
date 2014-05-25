@@ -15,7 +15,7 @@ void	script_init()
 {
 	lua = lua_newstate(script_allocator, NULL);
 	if (lua == NULL) {
-		ERROR("Failed to initialize Lua");
+		FATAL("Failed to initialize Lua");
 	}
 	luaL_openlibs(lua);
 
@@ -34,7 +34,7 @@ void	script_shutdown()
 void	script_load(const char *luafile)
 {
 	if (luaL_dofile(lua, luafile)) {
-		ERROR(lua_tostring(lua, -1));
+		FATAL(lua_tostring(lua, -1));
 	}
 }
 
@@ -50,7 +50,7 @@ void	script_call(const char *func, const char *fmt, ...)
 
 	if (func == NULL) {
 		if (lua_pcall(lua, 0, 0, 0) != 0) {
-			ERROR(lua_tostring(lua, -1));
+			FATAL(lua_tostring(lua, -1));
 		}
 		return;
 	}
@@ -58,7 +58,7 @@ void	script_call(const char *func, const char *fmt, ...)
 	lua_getglobal(lua, func);
 	if (fmt == NULL) {
 		if (lua_pcall(lua, 0, 0, 0) != 0) {
-			ERROR(lua_tostring(lua, -1));
+			FATAL(lua_tostring(lua, -1));
 		}
 		return;
 	}
@@ -84,6 +84,6 @@ void	script_call(const char *func, const char *fmt, ...)
 	}
 	va_end(v);
 	if (lua_pcall(lua, i, 0, 0) != 0) {
-		ERROR(lua_tostring(lua, -1));
+		FATAL(lua_tostring(lua, -1));
 	}
 }

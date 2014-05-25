@@ -1,6 +1,13 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#define ENABLE_EVENT_MOUSEMOVE	0
+#define ENABLE_EVENT_MOUSEWHEEL	0
+
+#define MAX_PATHNAME		256
+#define MAX_STRING		32000
+#define MAX_FILE		(4*1024*1024)
+
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
@@ -16,23 +23,57 @@
 #ifndef _WINDOWS
 #include <unistd.h>
 #include <sys/stat.h>
-#define MKDIR(P,M)	mkdir((P),(M))
+#include <dirent.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <errno.h>
+
+#define MKDIR(P)	mkdir((P),0777)
 #define RMDIR(P)	rmdir((P))
 #define GETCWD(B,L)	getcwd((B),(L))
+#define PATH(P)		(P)
+
+typedef DIR		directory_t;
+typedef struct dirent	direntry_t;
+
+#define OPENDIR(P)	(opendir((P)))
+#define READDIR(D)	(readdir((D)))
+#define DIRENT_NAME(E)	((E)->d_name)
+#define CLOSEDIR(D)	(closedir((D)))
+
 #else
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #include <direct.h>
-#define MKDIR(P, M)	_mkdir((P))
-#define RMDIR(P)	_rmdir((P))
-#define GETCWD(B,L)	_getcwd((B),(L))
+
+#define MKDIR(P)	(CreateDirectoryA((P), NULL) == 0)
+#define RMDIR(P)	(RemoveDirectoryA((P)) == 0)
+#define GETCWD(B, N)	(GetCurrentDirectoryA((N), (B)) == 0)
+
+char	*convert_path(const char *path);
+#define PATH(P)	(convert_path((P)))
+
+struct directory_s {
+	HANDLE dirh;
+	WIN32_FIND_DATA data;
+	int first_time;
+};
+
+typedef struct directory_s	directory_t;
+typedef WIN32_FIND_DATA		direntry_t;
+
+directory_t	*win_opendir(const char *path);
+direntry_t	*win_readdir(directory_t *dir);
+void		win_closedir(directory_t *dir);
+
+#define OPENDIR(P)	(win_opendir((P)))
+#define READDIR(D)	(win_readdir((D)))
+#define DIRENT_NAME(E)	((E)->cFileName)	
+#define CLOSEDIR(D)	(win_closedir((D)))
+
 #endif
 
-#define	ENABLE_EVENT_MOUSEMOVE	0
-
-#define MAX_PATH		256
-#define MAX_STRING		32000
-#define MAX_FILE		(4*1024*1024)
-
-#define ERROR(F, ...)	do { \
+#define FATAL(F, ...)	do { \
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", va((F), ##__VA_ARGS__), NULL);	\
 	quit(-1);	\
 	} while (0);	\
@@ -51,9 +92,9 @@ enum {
 };
 
 enum {
-	FILE_SET,
-	FILE_CUR,
-	FILE_END
+	FILESEEK_SET,
+	FILESEEK_CUR,
+	FILESEEK_END
 };
 
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
@@ -246,6 +287,8 @@ char	*pathjoin(const char *base, const char *path);
 
 void	sys_copy(const char *from, const char *to);
 int	sys_exists(const char *path);
+int	sys_isfile(const char *path);
+int	sys_isdir(const char *path);
 
 extern	char *_basepath;
 extern	const char *platform;
