@@ -3,7 +3,6 @@ cl /nologo /TC /D _WINDOWS /I code /I windows/include/lua /I windows/include/SDL
 del /q *.obj
 if not exist build mkdir build
 copy windows\libs\*.dll build
-copy constants.lua build
 mkdir build\game
 robocopy game build\game /E >nul
 mkdir build\base

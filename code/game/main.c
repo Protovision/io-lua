@@ -7,7 +7,6 @@ void	init(int argc, char *argv[])
 	const char *path;
 
 	common_init(argc, argv);
-	script_load( basepath("constants.lua") );
 
 	path = gamepath("config.lua");
 	if (sys_exists(path)) {

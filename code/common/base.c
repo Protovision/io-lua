@@ -73,10 +73,16 @@ static game_resources_t game_resources[] = {
 	{ NULL, NULL, NULL }
 };
 
+static const char *game_scripts[] = {
+	"scripts/constants.lua",
+	NULL
+};
+
 void	base_init()
 {
 	game_resources_t *r;
 	resource_t *s;
+	int i;
 	unsigned int color;
 
 	for (r = game_resources; r->resources != NULL; ++r) {
@@ -84,7 +90,11 @@ void	base_init()
 			r->load(s->name, basepath(s->file));
 		}	
 	}
-	
+
+	for (i = 0; game_scripts[i] != NULL; ++i) {
+		script_load(basepath(game_scripts[i]));
+	}
+
 	sscanf(c_bgcolor->string, "%x", &color);
 	video_setColor(color);
 	video_clear();
