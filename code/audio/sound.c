@@ -129,11 +129,37 @@ void	sound_free(sound_t *s)
 	memset(s1, 0, sizeof(sound_t));
 }
 
+static void sound_convert(SDL_AudioSpec *src_spec, SDL_AudioSpec *dst_spec,
+	Uint8 *src_buf, Uint32 src_len, Uint8 **dst_buf, Uint32 *dst_len)
+{
+	SDL_AudioCVT cvt;
+
+	SDL_BuildAudioCVT(&cvt, src_spec->format, src_spec->channels,
+		src_spec->freq, dst_spec->format, dst_spec->channels,
+		dst_spec->freq);
+
+	if (cvt.needed == 0) {
+		*dst_buf = src_buf;
+		*dst_len = src_len;
+		return;
+	}
+
+	cvt.len = src_len;
+	cvt.buf = (Uint8*)SDL_malloc(cvt.len * cvt.len_mult);
+	memcpy(cvt.buf, src_buf, src_len);
+	if (SDL_ConvertAudio(&cvt)) {
+		FATAL(SDL_GetError());
+	}
+	*dst_buf = cvt.buf;
+	*dst_len = cvt.len;
+}
+
 sound_t	*sound_load(const char *file)
 {
 	sound_t	*s;
-	SDL_AudioSpec wav_spec;
-	Uint32 len;
+	SDL_AudioSpec wav_spec, *src_spec;
+	Uint32 len, newlen;
+	Uint8 *newbuf;
 
 	extern SDL_AudioSpec audio_spec;
 
@@ -143,8 +169,16 @@ sound_t	*sound_load(const char *file)
 	}
 
 	wav_spec = audio_spec;
-	if (SDL_LoadWAV(file, &wav_spec, &s->buf, &s->len) == NULL)
+	src_spec = SDL_LoadWAV(file, &wav_spec, &s->buf, &s->len);
+	if (src_spec == NULL)
 		FATAL(SDL_GetError());
+
+	sound_convert(src_spec, &audio_spec, s->buf, s->len, &newbuf, &newlen);
+	if (s->buf != newbuf) {
+		SDL_FreeWAV(s->buf);
+		s->buf = newbuf;
+		s->len = newlen;
+	}
 
 	switch (audio_spec.format) {
 	case AUDIO_U8:
@@ -247,6 +281,7 @@ void	audio_callback(void *cookie, Uint8 *stream, int len)
 						channels[i].offset = 0;
 					} else {
 						channel_free(&channels[i]);
+						break;
 					}
 				}
 			}
@@ -258,7 +293,8 @@ void	audio_callback(void *cookie, Uint8 *stream, int len)
 			if (channels[i].flags & CHANNEL_PAUSED) continue;
 			for (n = 0; n < len; ++n) {
 				if (s_mute->integer == 0) {
-					((Sint16*)stream)[n] += ((Sint16*)channels[i].sound->buf)[channels[i].offset] * s_volume->real;
+					((Sint16*)stream)[n] += 
+						((Sint16*)channels[i].sound->buf)[channels[i].offset] * s_volume->real;
 				}
 				++channels[i].offset;
 				if (channels[i].offset >= channels[i].sound->len) {
@@ -266,6 +302,7 @@ void	audio_callback(void *cookie, Uint8 *stream, int len)
 						channels[i].offset = 0;
 					} else {
 						channel_free(&channels[i]);
+						break;
 					}
 				}
 			}
@@ -277,7 +314,8 @@ void	audio_callback(void *cookie, Uint8 *stream, int len)
 			if (channels[i].flags & CHANNEL_PAUSED) continue;
 			for (n = 0; n < len; ++n) {
 				if (s_mute->integer == 0) {
-					((Sint32*)stream)[n] += ((Sint32*)channels[i].sound->buf)[channels[i].offset] * s_volume->real;
+					((Sint32*)stream)[n] +=
+						((Sint32*)channels[i].sound->buf)[channels[i].offset] * s_volume->real;
 				}
 				++channels[i].offset;
 				if (channels[i].offset >= channels[i].sound->len) {
@@ -285,6 +323,7 @@ void	audio_callback(void *cookie, Uint8 *stream, int len)
 						channels[i].offset = 0;
 					} else {
 						channel_free(&channels[i]);
+						break;
 					}
 				}
 			}
