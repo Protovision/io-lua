@@ -72,6 +72,7 @@ int	trap_LoadFont(lua_State *s)
 	int fontsize;
 
 	trap_args(s, "LoadFont", "si", &fontname, &fontsize);
+	if (fontsize == 0) fontsize = c_fontsize->integer;
 	font = font_load(gamepath(fontname), fontsize);
 	if (font == NULL) {
 		lua_pushnil(s);
