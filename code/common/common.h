@@ -228,9 +228,22 @@ void	var_load(gameVar_t *vars);
 
 void	script_init();
 void	script_shutdown();
+
 void	script_load(const char *luafile);
 void	script_register(const char *cmdname, int (*func)(lua_State*));
 void	script_call(const char *func, const char *fmt, ...);
+
+void	script_export_integer(const char *name, int value);
+void	script_export_number(const char *name, double value);
+void	script_export_string(const char *name, const char *value);
+void	script_export_pointer(const char *name, void *value);
+void	script_export_boolean(const char *name, int value);
+
+int	script_import_integer(const char *name);
+double	script_import_number(const char *name);
+const char *script_import_string(const char *name);
+void	*script_import_pointer(const char *name);
+int	script_import_boolean(const char *name);
 
 /* =====================================================
  * trap.c
@@ -281,18 +294,31 @@ void		image_colorize(SDL_Texture *img, Uint32 hue);
 
 char	*va(const char *fmt, ...);
 char	*pathjoin(const char *base, const char *path);
-#define basepath(p)	(pathjoin(_basepath, (p)))
+#define basepath(p)	(pathjoin(c_basepath->string, (p)))
 #define gamepath(p)	(pathjoin(c_gamepath->string, (p)))
 #define datapath(p)	(pathjoin(c_datapath->string, (p)))
+
+/* ====================================================
+ * sys/
+ * ====================================================
+ */
 
 void	sys_copy(const char *from, const char *to);
 int	sys_exists(const char *path);
 int	sys_isfile(const char *path);
 int	sys_isdir(const char *path);
 
-extern	char *_basepath;
+/* ====================================================
+ * base.c
+ * ====================================================
+ */
+
+void	base_init();
+void	base_shutdown();
+
 extern	const char *platform;
-extern	var_t *c_gamepath, *c_datapath, *c_fps;
+extern	var_t *c_basepath, *c_gamepath, *c_datapath,
+	*c_fps, *c_fontsize, *c_fontfamily, *c_fgcolor, *c_bgcolor;
 
 
 #endif

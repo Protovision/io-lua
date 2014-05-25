@@ -103,7 +103,15 @@ int	trap_DrawText(lua_State *s)
 	const char *text;
 	FONT *font;
 
-	trap_args(s, "DrawText", "iispi", &x, &y, &text, &font, &color);
+	trap_args(s, "DrawText", "iisip", &x, &y, &text, &color, &font);
+
+	if (color == 0) {
+		sscanf(c_fgcolor->string, "%x", &color);
+	}
+	if (font == NULL) {
+		font = (FONT*)script_import_pointer(c_fontfamily->string);
+	}
+
 	video_drawText(x, y, text, font, color);
 	return 0;
 }

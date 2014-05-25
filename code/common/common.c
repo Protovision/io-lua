@@ -1,8 +1,17 @@
 #include "common.h"
 
-char		*_basepath;
 const char	*platform;
-var_t		*c_gamepath, *c_datapath, *c_fps;
+var_t		*c_basepath, *c_gamepath, *c_datapath, *c_fps,
+		*c_fontsize, *c_fontfamily, *c_fgcolor, *c_bgcolor;
+
+gameVar_t common_vars[] = {
+	{ &c_fps, "fps", "85" },
+	{ &c_fontsize, "fontsize", "12" },
+	{ &c_fontfamily, "fontfamily", "FONT_SANS" },
+	{ &c_fgcolor, "fgcolor", "0x000000FF" },
+	{ &c_bgcolor, "bgcolor", "0xFFFFFFFF" },
+	{ NULL, NULL, NULL },
+};
 
 void	common_init(int argc, char *argv[])
 {
@@ -21,13 +30,20 @@ void	common_init(int argc, char *argv[])
 		}
 	}
 
-	_basepath = SDL_GetBasePath();
 	platform = SDL_GetPlatform();
+	s = SDL_GetBasePath();
+
+	c_basepath = var_get("basepath");
+	if (c_basepath == NULL) {
+		c_basepath = var_set("basepath", va("%sbase", s));
+	}
 
 	c_gamepath = var_get("gamepath");
 	if (c_gamepath == NULL) {
-		c_gamepath = var_set("gamepath", va("%sgame", _basepath));
+		c_gamepath = var_set("gamepath", va("%sgame", s));
 	}
+
+	SDL_free(s);
 
 	c_datapath = var_get("datapath");
 	if (c_datapath == NULL) {
@@ -37,26 +53,22 @@ void	common_init(int argc, char *argv[])
 		SDL_free(s);
 	}
 
-	c_fps = var_get("fps");
-	if (c_fps == NULL) {
-		c_fps = var_set("fps", "85");
-	}
+	var_load(common_vars);
 
-	script_init();
-	trap_init();
+	event_init();
 	font_init();
 	image_init();
-	event_init();
+	script_init();
+	trap_init();
 }
 
 void	common_shutdown()
 {
-	SDL_free(_basepath);
-	event_shutdown();
-	image_shutdown();
-	font_shutdown();
 	trap_shutdown();
 	script_shutdown();
+	image_shutdown();
+	font_shutdown();
+	event_shutdown();
 	var_shutdown();
 	mem_shutdown();
 }

@@ -32,6 +32,7 @@ void	script_init()
 	lua_pushstring(lua, gamepath("?.lua"));
 	lua_settable(lua, 1);
 	lua_settop(lua, 0);
+
 }
 
 void	script_shutdown()
@@ -64,6 +65,11 @@ void	script_call(const char *func, const char *fmt, ...)
 	}
 
 	lua_getglobal(lua, func);
+	if (lua_isnil(lua, -1)) {
+		lua_pop(lua, 1);
+		return;
+	}
+
 	if (fmt == NULL) {
 		if (lua_pcall(lua, 0, 0, 0) != 0) {
 			FATAL(lua_tostring(lua, -1));
@@ -94,4 +100,79 @@ void	script_call(const char *func, const char *fmt, ...)
 	if (lua_pcall(lua, i, 0, 0) != 0) {
 		FATAL(lua_tostring(lua, -1));
 	}
+}
+
+void	script_export_integer(const char *name, int value)
+{
+	lua_pushinteger(lua, value);
+	lua_setglobal(lua, name);
+}
+
+void	script_export_number(const char *name, double value)
+{
+	lua_pushnumber(lua, value);
+	lua_setglobal(lua, name);
+}
+
+void	script_export_string(const char *name, const char *value)
+{
+	lua_pushstring(lua, value);
+	lua_setglobal(lua, name);	
+}
+
+void	script_export_pointer(const char *name, void *value)
+{
+	lua_pushlightuserdata(lua, value);
+	lua_setglobal(lua, name);
+}
+
+void	script_export_boolean(const char *name, int value)
+{
+	lua_pushboolean(lua, value);
+	lua_setglobal(lua, name);
+}
+
+int	script_import_integer(const char *name)
+{
+	int value;
+	lua_getglobal(lua, name);
+	value = lua_tointeger(lua, -1);
+	lua_pop(lua, 1);
+	return value;
+}
+
+double	script_import_number(const char *name)
+{
+	double value;
+	lua_getglobal(lua, name);
+	value = lua_tonumber(lua, -1);
+	lua_pop(lua, 1);
+	return value;
+}
+
+const char *script_import_string(const char *name)
+{
+	const char *value;
+	lua_getglobal(lua, name);
+	value = lua_tostring(lua, -1);
+	lua_pop(lua, 1);
+	return value;
+}
+
+void	*script_import_pointer(const char *name)
+{
+	void *value;
+	lua_getglobal(lua, name);
+	value = (void*)lua_topointer(lua, -1);
+	lua_pop(lua, 1);
+	return value;
+}
+
+int	script_import_boolean(const char *name)
+{
+	int value;
+	lua_getglobal(lua, name);
+	value = lua_toboolean(lua, -1);
+	lua_pop(lua, 1);
+	return value;
 }

@@ -46,7 +46,7 @@ clean:
 	
 makedirs:
 	if [ ! -d $(BUILD_DIR)/obj ]; then mkdir -p $(BUILD_DIR)/obj; fi
+	rsync -ur base $(BUILD_DIR)
 	rsync -ur game $(BUILD_DIR)
-	rsync -u constants.lua $(BUILD_DIR)
 	rsync -u windows/libs/*.dll $(BUILD_DIR)
 

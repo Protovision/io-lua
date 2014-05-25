@@ -4,11 +4,19 @@
 
 void	init(int argc, char *argv[])
 {
+	const char *path;
+
 	common_init(argc, argv);
 	script_load( basepath("constants.lua") );
-	script_load( gamepath("config.lua") );
-	video_init();
+
+	path = gamepath("config.lua");
+	if (sys_exists(path)) {
+		script_load(path);
+	}
+
 	audio_init();
+	video_init();
+	base_init();
 	script_load( gamepath("game.lua") );
 	script_call("main", "i", EVENT_INIT);
 }
@@ -18,8 +26,9 @@ void	quit(int sig)
 	if (sig != -1) {
 		script_call("main", "i", EVENT_SHUTDOWN);
 	}
-	audio_shutdown();
+	base_shutdown();
 	video_shutdown();
+	audio_shutdown();
 	common_shutdown();
 	exit(0);
 }
