@@ -1,7 +1,7 @@
 #include "common.h"
 
-#define VAR_HASHTABLE_SIZE	256
-#define VAR_MAX			2000
+#define VAR_HASHTABLE_SIZE	64	
+#define VAR_MAX			128
 
 static int	free_var;
 static var_t	variables[VAR_MAX];

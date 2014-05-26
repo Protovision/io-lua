@@ -1,7 +1,7 @@
 #include "audio.h"
 
-#define	MAX_SOUNDS	256
-#define	MAX_SOUNDS_HASH	128
+#define	MAX_SOUNDS	128
+#define	MAX_SOUNDS_HASH 64	
 #define	MAX_CHANNELS	8	
 
 #define CHANNEL_LOOP	1

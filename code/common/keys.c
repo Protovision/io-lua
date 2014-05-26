@@ -7,6 +7,10 @@ KEY	key_decode(SDL_Keysym *k)
 	}
 
 	switch (k->sym) {
+	case SDLK_BACKSPACE:	return KEY_BACKSPACE;
+	case SDLK_TAB:		return KEY_TAB;
+	case SDLK_RETURN:	return KEY_RETURN;
+	case SDLK_ESCAPE:	return KEY_ESCAPE;
 	case SDLK_DELETE:	return KEY_DELETE;
 	case SDLK_CAPSLOCK:	return KEY_CAPSLOCK;
 	case SDLK_LSHIFT:

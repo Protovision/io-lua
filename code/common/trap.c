@@ -49,8 +49,7 @@ int	trap_Get(lua_State *s)
 	trap_args(s, "Get", "s", &varname);
 	var = var_get(varname);
 	if (var == NULL) {
-		lua_pushnil(s);
-		return 1;
+		FATAL("Game engine variable is not defined: %s", varname);
 	}
 	lua_pushstring(s, var->string);
 	return 1;	
@@ -68,15 +67,23 @@ int	trap_Set(lua_State *s)
 int	trap_LoadFont(lua_State *s)
 {
 	FONT *font;
-	const char *fontname;
+	const char *fontname, *fullpath;
 	int fontsize;
 
 	trap_args(s, "LoadFont", "si", &fontname, &fontsize);
 	if (fontsize == 0) fontsize = c_fontsize->integer;
-	font = font_load(gamepath(fontname), fontsize);
+
+	fullpath = gamepath(fontname);
+	if (!sys_exists(fullpath)) {
+		fullpath = basepath(fontname);
+		if (!sys_exists(fullpath)) {
+			FATAL("File not found in gamepath or basepath: %s", fontname);
+		}
+	}
+
+	font = font_load(fullpath, fontsize);
 	if (font == NULL) {
-		lua_pushnil(s);
-		return 1;
+		FATAL(TTF_GetError());
 	}
 	lua_pushlightuserdata(s, font);
 	return 1;
@@ -85,13 +92,21 @@ int	trap_LoadFont(lua_State *s)
 int	trap_LoadImage(lua_State *s)
 {
 	IMAGE *image;
-	const char *imgfile;
+	const char *imgfile, *fullpath;
 	
 	trap_args(s, "LoadImage", "s", &imgfile);
-	image = image_load(gamepath(imgfile));
+
+	fullpath = gamepath(imgfile);
+	if (!sys_exists(fullpath)) {
+		fullpath = basepath(imgfile);
+		if (!sys_exists(fullpath)) {
+			FATAL("File not found in gamepath or basepath: %s", imgfile);
+		}
+	}
+
+	image = image_load(fullpath);
 	if (image == NULL) {
-		lua_pushnil(s);
-		return 1;
+		FATAL(IMG_GetError());
 	}
 	lua_pushlightuserdata(s, image);
 	return 1;
@@ -361,11 +376,19 @@ int	trap_GetWindowSize(lua_State *s)
 
 int	trap_LoadSound(lua_State *s)
 {
-	const char *filename;
+	const char *filename, *fullpath;
 	sound_t *w;
 
 	trap_args(s, "LoadSound", "s", &filename);
-	w = sound_load(gamepath(filename));
+	fullpath = gamepath(filename);
+	if (!sys_exists(fullpath)) {
+		fullpath = basepath(filename);
+		if (!sys_exists(fullpath)) {
+			FATAL("File not found in gamepath or basepath: %s", filename);
+		}
+	}
+	
+	w = sound_load(fullpath);
 	lua_pushlightuserdata(s, w);
 	return 1;
 }
@@ -467,6 +490,15 @@ int	trap_ReadDataFile(lua_State *s)
 	return 1;
 }
 
+int	trap_ReadBaseFile(lua_State *s)
+{
+	const char *path;
+	
+	trap_args(s, "ReadBaseFile", "s", &path);
+	lua_pushstring(s, load_file(basepath(path)));
+	return 1;
+}
+
 int	trap_MessageBox(lua_State *s)
 {
 	const char *msg;
@@ -500,6 +532,7 @@ int	trap_SetVolume(lua_State *s)
 	int vol;
 
 	trap_args(s, "SetVolume", "i", &vol);
+	if (vol < 0) vol = 0;
 	audio_set_volume(vol);
 	return 0;
 }
@@ -716,6 +749,7 @@ trap_t syscalls[] = {
 	{ "ReadDirectory", trap_ReadDirectory },
 
 	{ "Basepath", trap_Basepath },
+	{ "ReadBaseFile", trap_ReadBaseFile },
 	
 	{ NULL, NULL }
 };

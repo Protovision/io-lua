@@ -17,13 +17,13 @@ void	init(int argc, char *argv[])
 	video_init();
 	base_init();
 	script_load( gamepath("game.lua") );
-	script_call("main", "i", EVENT_INIT);
+	script_call("init", NULL);
 }
 
 void	quit(int sig)
 {
 	if (sig != -1) {
-		script_call("main", "i", EVENT_SHUTDOWN);
+		script_call("shutdown", NULL);
 	}
 	base_shutdown();
 	video_shutdown();
