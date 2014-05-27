@@ -1,9 +1,9 @@
 
-x = 5
-y = 30
 text = 'Type stuff: '
 
-SetColor(COLOR_WHITE)
+mono = LoadFont("fonts/FreeMono.ttf", 32)
+
+SetColor(COLOR_BLACK)
 
 function keyboard(key, state)
 	if state ~= PRESSED then return end
@@ -16,6 +16,10 @@ end
 
 function update()
 	Clear()
-	DrawText(0, 0, text)
+	DrawText(0, 0, text, COLOR_LIME, mono)
+end
+
+function shutdown()
+	FreeFont(mono)
 end
 

@@ -506,6 +506,7 @@ int	trap_MessageBox(lua_State *s)
 
 	trap_args(s, "MessageBox", "s", &msg);
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "", msg, v_window);
+	SDL_RaiseWindow(v_window);
 	return 0;
 }
 
