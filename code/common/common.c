@@ -2,9 +2,11 @@
 
 const char	*platform;
 var_t		*c_basepath, *c_gamepath, *c_datapath, *c_fps,
-		*c_fontsize, *c_fontfamily, *c_fgcolor, *c_bgcolor;
+		*c_fontsize, *c_fontfamily, *c_fgcolor, *c_bgcolor,
+		*c_title;
 
 gameVar_t common_vars[] = {
+	{ &c_title, "title", "io-lua application" },
 	{ &c_fps, "fps", "85" },
 	{ &c_fontsize, "fontsize", "12" },
 	{ &c_fontfamily, "fontfamily", "FONT_SANS" },

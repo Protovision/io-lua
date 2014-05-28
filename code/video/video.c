@@ -12,8 +12,6 @@ SDL_Window	*v_window;
 SDL_Renderer	*v_renderer;
 
 gameVar_t	video_vars[] = {
-	//{ &v_driver, "v_driver", "0" },
-	//{ &v_renderDriver, "v_renderer", "-1" },
 	{ &v_width, "v_width", "640" },
 	{ &v_height, "v_height", "480" },
 	{ &v_fullscreen, "v_fullscreen", "0" },
@@ -55,7 +53,7 @@ void	video_init()
 	}
 
 	v_window = SDL_CreateWindow(
-		"IO_LUA", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		c_title->string, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		v_width->integer, v_height->integer, SDL_WINDOW_SHOWN);
 	v_renderer = SDL_CreateRenderer(v_window, v_renderDriver->integer, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawBlendMode(v_renderer, SDL_BLENDMODE_BLEND);

@@ -1,6 +1,1 @@
-
-function keyboard(key, status)
-	if status == PRESSED then
-		MessageBox(string.char(key))
-	end
-end
+DrawText(0, 0, "Hello world!")

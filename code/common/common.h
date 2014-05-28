@@ -318,7 +318,8 @@ void	base_shutdown();
 
 extern	const char *platform;
 extern	var_t *c_basepath, *c_gamepath, *c_datapath,
-	*c_fps, *c_fontsize, *c_fontfamily, *c_fgcolor, *c_bgcolor;
+	*c_fps, *c_fontsize, *c_fontfamily, *c_fgcolor, *c_bgcolor,
+	*c_title;
 
 
 #endif
