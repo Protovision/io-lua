@@ -125,8 +125,10 @@ void	sound_free(sound_t *s)
 	}
 	if (s1 == NULL) return;
 	if (s2 != NULL) s2->next = s1->next;
+
 	SDL_FreeWAV(s1->buf);
 	memset(s1, 0, sizeof(sound_t));
+
 }
 
 static void sound_convert(SDL_AudioSpec *src_spec, SDL_AudioSpec *dst_spec,

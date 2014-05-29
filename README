@@ -2,6 +2,14 @@
 IO-LUA is a 2D game engine for Lua.
 
 Current platform support: Linux, Mac OS X, Windows
-Dependencies: SDL2, SDL2_image, SDL2_ttf, Lua 5
+
+Compiling for Linux:
+	make -f Makefile.linux
+
+Compiling for Mac OS X:
+	make -f Makefile.macosx
+
+Compiling for Windows (use Visual Studio Command Prompt):
+	build.bat
 
 See https://github.com/Protovision/io-lua/wiki for documentation
