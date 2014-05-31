@@ -116,11 +116,8 @@ enum {
 // main.c
 void	quit(int sig);
 
-//input.c
-void	input();
-
-//update.c
-void	update();
+//frame.c
+void	frame();
 
 /* =====================================================
  * common.c

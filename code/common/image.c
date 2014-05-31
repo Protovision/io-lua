@@ -1,4 +1,4 @@
-#include "common.h"
+#include "common/common.h"
 #include "video/video.h"
 
 SDL_Texture	*image_load(const char *file) 

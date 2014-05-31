@@ -1,5 +1,5 @@
 @echo off
-cl /nologo /TC /D _WINDOWS /I code /I libs/windows/include/SDL2 /I libs/lua code\game\*.c code\common\*.c code\input\*.c code\video\*.c code\sys\*.c code\audio\*.c /MD /link libs/windows/lib/*.lib /SUBSYSTEM:CONSOLE /OUT:io-lua.exe
+cl /nologo /TC /D _WINDOWS /I code /I libs/windows/include/SDL2 /I libs/lua code\common\*.c code\video\*.c code\sys\*.c code\audio\*.c /MD /link libs/windows/lib/*.lib /SUBSYSTEM:CONSOLE /OUT:io-lua.exe
 del /q *.obj
 if not exist build mkdir build
 copy libs\windows\dll\*.dll build

@@ -1,6 +1,7 @@
-#include "input.h"
+#include "common/common.h"
+#include "video/video.h"
 
-void	input()
+static void	input()
 {
 	SDL_Event e;
 	event_t ev;
@@ -54,4 +55,55 @@ void	input()
 		}
 
 	}	
+}
+
+static void	update()
+{
+	event_t ev;
+
+	event_pull(&ev);
+	
+	switch (ev.type) {
+	case EVENT_KEYBOARD:
+		script_call("keyboard", "ii", ev.key.key, ev.key.pressed);
+		break;
+	case EVENT_MOUSEBUTTON:
+		script_call("mousebutton", "iiii", ev.button.x, ev.button.y, ev.button.button, ev.button.pressed);
+		break;
+#if ENABLE_EVENT_MOUSEWHEEL == 1
+	case EVENT_MOUSEWHEEL:
+		script_call("mousewheel", "i", ev.scroll.dir);
+		break;
+#endif
+
+#if ENABLE_EVENT_MOUSEMOVE == 1
+	case EVENT_MOUSEMOVE:
+		script_call("mousemove", "ii", ev.move.x, ev.move.y);
+		break;
+#endif
+	case EVENT_NONE:
+	default:
+		break;
+	}
+
+	script_call("update", NULL);
+	video_render();	
+}
+
+void	frame()
+{
+	Uint32 start, elapsed, delay;
+
+	input();
+
+	start = SDL_GetTicks();
+
+	update();
+
+	delay = 1000/c_fps->integer;
+	elapsed = SDL_GetTicks() - start;
+
+	if (elapsed < delay) {
+		SDL_Delay(delay - elapsed);
+	}
 }	

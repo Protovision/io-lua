@@ -34,27 +34,14 @@ void	quit(int sig)
 
 int	main(int argc, char *argv[])
 {
-	Uint32 start, elapsed, delay;
-
 	init(argc, argv);
 
 	signal(SIGTERM, quit);
 	signal(SIGINT, quit);
 
 	for (;;) {
-		start = SDL_GetTicks();
-
-		input();
-		update();
-
-		delay = 1000/c_fps->integer;
-		elapsed = SDL_GetTicks()-start;
-
-		if (elapsed < delay) {
-			SDL_Delay(delay-elapsed);
-		}
+		frame();
 	}
-
 	
 	return 0;
 }
