@@ -268,6 +268,15 @@ int	trap_WriteFile(lua_State *s)
 	return 0;
 }
 
+int	trap_IsEof(lua_State *s)
+{
+	FILE *f;
+	
+	trap_args(s, "IsEof", "p", &f);
+	lua_pushboolean(s, feof(f));
+	return 1;
+}
+
 int	trap_SeekFile(lua_State *s)
 {
 	FILE *f;
@@ -703,6 +712,7 @@ trap_t syscalls[] = {
 	{ "OpenFile", trap_OpenFile },
 	{ "ReadFile", trap_ReadFile },
 	{ "WriteFile", trap_WriteFile },
+	{ "IsEof", trap_IsEof },
 	{ "SeekFile", trap_SeekFile },
 	{ "CloseFile", trap_CloseFile },
 	{ "RenameFile", trap_RenameFile },
