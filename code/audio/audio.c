@@ -26,11 +26,13 @@ void	audio_init()
 	var_load(sound_vars);
 
 	s_driver = var_get("s_driver");
-	
-	if (strcmp(platform, "Windows") == 0) {
-		s_driver = var_set("s_driver", "2");
-	} else if (strcmp(platform, "Mac OS X") == 0 || strcmp(platform, "Linux") == 0) {
-		s_driver = var_set("s_driver", "0");
+
+	if (s_driver == NULL) {	
+		if (strcmp(platform, "Windows") == 0) {
+			s_driver = var_set("s_driver", "2");
+		} else if (strcmp(platform, "Mac OS X") == 0 || strcmp(platform, "Linux") == 0) {
+			s_driver = var_set("s_driver", "0");
+		}
 	}
 
 	if (!SDL_WasInit(SDL_INIT_AUDIO)) {
