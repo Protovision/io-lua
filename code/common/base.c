@@ -19,7 +19,7 @@ typedef struct {
 static resource_t fonts[] = {
 	{ "FONT_SANS", "fonts/FreeSans.ttf" },
 	{ "FONT_SANS_BOLD", "fonts/FreeSansBold.ttf" },
-	{ "FONT_SANS_ITALIC", "fonts/FreeSansItalic.ttf" },
+	{ "FONT_SANS_ITALIC", "fonts/FreeSansOblique.ttf" },
 	{ "FONT_SERIF", "fonts/FreeSerif.ttf" },
 	{ "FONT_SERIF_BOLD", "fonts/FreeSerifBold.ttf" },
 	{ "FONT_SERIF_ITALIC", "fonts/FreeSerifItalic.ttf" },
@@ -87,12 +87,12 @@ void	base_init()
 
 	for (r = game_resources; r->resources != NULL; ++r) {
 		for (s = r->resources; s->name != NULL; ++s) {
-			r->load(s->name, basepath(s->file));
+			r->load(s->name, s->file);
 		}	
 	}
 
 	for (i = 0; game_scripts[i] != NULL; ++i) {
-		script_load(basepath(game_scripts[i]));
+		script_load(game_scripts[i]);
 	}
 
 	sscanf(c_bgcolor->string, "%x", &color);

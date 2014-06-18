@@ -16,15 +16,19 @@ SRC_COMMON=$(shell find ./code/common -name '*.c' -exec basename {} \;)
 SRC_VIDEO=$(shell find ./code/video -name '*.c' -exec basename {} \;)
 SRC_SYS=$(shell find ./code/sys -name '*.c' -exec basename {} \;)
 SRC_AUDIO=$(shell find ./code/audio -name '*.c' -exec basename {} \;)
+SRC_UNZIP=$(shell find ./code/unzip -name '*.c' -exec basename {} \;)
+SRC_ZLIB=$(shell find ./code/zlib -name '*.c' -exec basename {} \;)
 
-SRC=$(SRC_COMMON) $(SRC_VIDEO) $(SRC_SYS) $(SRC_AUDIO)
+SRC=$(SRC_COMMON) $(SRC_VIDEO) $(SRC_SYS) $(SRC_AUDIO) $(SRC_UNZIP) $(SRC_ZLIB)
 
 OBJ_COMMON=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_COMMON))
 OBJ_VIDEO=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_VIDEO))
 OBJ_SYS=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_SYS))
 OBJ_AUDIO=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_AUDIO))
+OBJ_UNZIP=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_UNZIP))
+OBJ_ZLIB=$(patsubst %.c,$(BUILD_DIR)/obj/%.o,$(SRC_ZLIB))
 
-OBJ=$(OBJ_COMMON) $(OBJ_VIDEO) $(OBJ_SYS) $(OBJ_AUDIO)
+OBJ=$(OBJ_COMMON) $(OBJ_VIDEO) $(OBJ_SYS) $(OBJ_AUDIO) $(OBJ_UNZIP) $(OBJ_ZLIB)
 
 all: makedirs $(BUILD_DIR)/$(EXE)
 
@@ -36,6 +40,10 @@ $(BUILD_DIR)/obj/%.o : code/sys/%.c
 	$(CC) -g -c -o $@ $< $(INCLUDE_FLAGS)
 $(BUILD_DIR)/obj/%.o : code/audio/%.c
 	$(CC) -g -c -o $@ $< $(INCLUDE_FLAGS)
+$(BUILD_DIR)/obj/%.o : code/unzip/%.c
+	$(CC) -g -c -o $@ $< $(INCLUDE_FLAGS)
+$(BUILD_DIR)/obj/%.o : code/zlib/%.c
+	$(CC) -g -c -o $@ $< $(INCLUDE_FLAGS)
 
 $(BUILD_DIR)/$(EXE) : $(OBJ) 
 	$(CC) -g -o $@ $^ $(CCFLAGS)
@@ -45,6 +53,6 @@ clean:
 	
 makedirs:
 	if [ ! -d $(BUILD_DIR)/obj ]; then mkdir -p $(BUILD_DIR)/obj; fi
-	rsync -ur base $(BUILD_DIR)
-	rsync -ur game $(BUILD_DIR)
+	cp base.zip $(BUILD_DIR)
+	cp game.zip $(BUILD_DIR)
 

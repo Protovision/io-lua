@@ -67,24 +67,13 @@ int	trap_Set(lua_State *s)
 int	trap_LoadFont(lua_State *s)
 {
 	FONT *font;
-	const char *fontname, *fullpath;
+	const char *fontname;
 	int fontsize;
 
 	trap_args(s, "LoadFont", "si", &fontname, &fontsize);
 	if (fontsize == 0) fontsize = c_fontsize->integer;
 
-	fullpath = gamepath(fontname);
-	if (!sys_exists(fullpath)) {
-		fullpath = basepath(fontname);
-		if (!sys_exists(fullpath)) {
-			FATAL("File not found in gamepath or basepath: %s", fontname);
-		}
-	}
-
-	font = font_load(fullpath, fontsize);
-	if (font == NULL) {
-		FATAL(TTF_GetError());
-	}
+	font = font_load(fontname, fontsize);
 	lua_pushlightuserdata(s, font);
 	return 1;
 }
@@ -92,22 +81,11 @@ int	trap_LoadFont(lua_State *s)
 int	trap_LoadImage(lua_State *s)
 {
 	IMAGE *image;
-	const char *imgfile, *fullpath;
+	const char *imgfile;
 	
 	trap_args(s, "LoadImage", "s", &imgfile);
 
-	fullpath = gamepath(imgfile);
-	if (!sys_exists(fullpath)) {
-		fullpath = basepath(imgfile);
-		if (!sys_exists(fullpath)) {
-			FATAL("File not found in gamepath or basepath: %s", imgfile);
-		}
-	}
-
-	image = image_load(fullpath);
-	if (image == NULL) {
-		FATAL(IMG_GetError());
-	}
+	image = image_load(imgfile);
 	lua_pushlightuserdata(s, image);
 	return 1;
 }
@@ -129,6 +107,7 @@ int	trap_DrawText(lua_State *s)
 	}
 
 	video_drawText(x, y, text, font, color);
+
 	return 0;
 }
 
@@ -385,19 +364,11 @@ int	trap_GetWindowSize(lua_State *s)
 
 int	trap_LoadSound(lua_State *s)
 {
-	const char *filename, *fullpath;
+	const char *filename;
 	sound_t *w;
 
 	trap_args(s, "LoadSound", "s", &filename);
-	fullpath = gamepath(filename);
-	if (!sys_exists(fullpath)) {
-		fullpath = basepath(filename);
-		if (!sys_exists(fullpath)) {
-			FATAL("File not found in gamepath or basepath: %s", filename);
-		}
-	}
-	
-	w = sound_load(fullpath);
+	w = sound_load(filename);
 	lua_pushlightuserdata(s, w);
 	return 1;
 }
@@ -466,45 +437,37 @@ int	trap_GetTicks(lua_State *s)
 	return 1;
 }
 
-char	*load_file(const char *path)
+int	trap_LoadData(lua_State *s)
 {
-	FILE *f;
-	static char data[MAX_FILE];
+	const char *file;
+	SDL_RWops *ops;
 	size_t n;
+	static char data[MAX_FILE];
+	
+	trap_args(s, "LoadData", "s", &file);
+	ops = unz_open(file);
+	n = SDL_RWread(ops, data, 1, MAX_FILE);
+	data[n] = 0;
+	SDL_RWclose(ops);
+	lua_pushstring(s, data);
+	return 1;
+}
 
-	f = fopen(path, "rb");
-	if (f == NULL) FATAL("Could not open file: %s", path);
+int	trap_LoadFile(lua_State *s)
+{
+	const char *path;
+	FILE *f;
+	size_t n;
+	static char data[MAX_FILE];
+
+	trap_args(s, "LoadFile", "s", &path);
+	f = fopen(datapath(path), "rb");
+	if (f == NULL)
+		FATAL("Could not open file: %s", datapath(path));
 	n = fread(data, 1, MAX_FILE, f);
 	fclose(f);
-
-	data[n] = 0;
-	return data;
-}
-
-int	trap_ReadGameFile(lua_State *s)
-{
-	const char *path;
-
-	trap_args(s, "ReadGameFile", "s", &path);
-	lua_pushstring(s, load_file(gamepath(path)));
-	return 1;
-}
-
-int	trap_ReadDataFile(lua_State *s)
-{
-	const char *path;
-		
-	trap_args(s, "ReadDataFile", "s", &path);
-	lua_pushstring(s, load_file(datapath(path)));
-	return 1;
-}
-
-int	trap_ReadBaseFile(lua_State *s)
-{
-	const char *path;
-	
-	trap_args(s, "ReadBaseFile", "s", &path);
-	lua_pushstring(s, load_file(basepath(path)));
+	data[n] = 0;	
+	lua_pushstring(s, data);
 	return 1;
 }
 
@@ -565,13 +528,13 @@ int	trap_UnmuteAudio(lua_State *s)
 	return 0;
 }
 
-int	trap_WriteDataFile(lua_State *s)
+int	trap_SaveFile(lua_State *s)
 {
 	FILE *f;
 	int len;
 	const char *path, *data, *fullpath;
 
-	trap_args(s, "WriteDataFile", "ssi", &path, &data, &len);
+	trap_args(s, "SaveFile", "ssi", &path, &data, &len);
 
 	fullpath = datapath(path);
 	f = fopen(fullpath, "wb");
@@ -583,48 +546,13 @@ int	trap_WriteDataFile(lua_State *s)
 	return 0;
 }
 
-int	trap_CheckDataFile(lua_State *s)
+int	trap_CheckFile(lua_State *s)
 {
 	const char *path;
 
-	trap_args(s, "CheckDataFile", "s", &path);
+	trap_args(s, "CheckFile", "s", &path);
 	lua_pushboolean(s, sys_exists(datapath(path)));
 	return 1;
-}
-
-int	trap_Gamepath(lua_State *s)
-{
-	const char *path;
-
-	trap_args(s, "Gamepath", "s", &path);
-	lua_pushstring(s, gamepath(path));
-	return 1;
-}
-
-int	trap_Datapath(lua_State *s)
-{
-	const char *path;
-
-	trap_args(s, "Datapath", "s", &path);
-	lua_pushstring(s, datapath(path));
-	return 1;
-}
-
-int	trap_AppendDataFile(lua_State *s)
-{
-	FILE *f;
-	int len;
-	const char *path, *fullpath, *data;
-
-	trap_args(s, "AppendDataFile", "ssi", &path, &data, &len);
-	fullpath = datapath(path);
-	f = fopen(fullpath, "ab");
-	if (f == NULL) FATAL("Failed to append to data file: %s", fullpath);
-	if (len == 0) len = strlen(data);
-	fwrite(data, 1, len, f);
-	fclose(f);
-
-	return 0;
 }
 
 int	trap_IsFile(lua_State *s)
@@ -632,7 +560,7 @@ int	trap_IsFile(lua_State *s)
 	const char *path;
 
 	trap_args(s, "IsFile", "s", &path);
-	lua_pushboolean(s, sys_isfile(PATH(path)));
+	lua_pushboolean(s, sys_isfile(datapath(path)));
 	return 1;
 }
 
@@ -641,7 +569,7 @@ int	trap_IsDirectory(lua_State *s)
 	const char *path;
 
 	trap_args(s, "IsDirectory", "s", &path);
-	lua_pushboolean(s, sys_isdir(PATH(path)));
+	lua_pushboolean(s, sys_isdir(datapath(path)));
 	return 1;
 }
 
@@ -654,7 +582,7 @@ int	trap_ReadDirectory(lua_State *s)
 
 	trap_args(s, "ReadDirectory", "s", &path);
 
-	path = PATH(path);
+	path = datapath(path);
 	dir = OPENDIR(path);
 	if (dir == NULL) FATAL("Failed to open directory: %s", path);
 
@@ -675,13 +603,14 @@ int	trap_ReadDirectory(lua_State *s)
 	return 1;
 }
 
-int	trap_Basepath(lua_State *s)
-{
-	const char *path;
+int	trap_Call(lua_State *s)
+{	
+	const char *luafile;
+	int returned;
 
-	trap_args(s, "Basepath", "s", &path);
-	lua_pushstring(s, basepath(path));
-	return 1;
+	trap_args(s, "Call", "s", &luafile);
+	returned = script_load(luafile);
+	return returned;
 }
 
 typedef struct {
@@ -690,78 +619,70 @@ typedef struct {
 } trap_t;
 
 trap_t syscalls[] = {
-	{ "Get", trap_Get },
-	{ "Set", trap_Set },
-	{ "GetPlatform", trap_GetPlatform },
 
-	{ "LoadFont", trap_LoadFont },
+	/* Image functions */
 	{ "LoadImage", trap_LoadImage },
-	{ "DrawText", trap_DrawText },
-	{ "DrawBackground", trap_DrawBackground },
 	{ "DrawImage", trap_DrawImage },
-	{ "Quit", trap_Quit },
-	{ "FreeFont",	trap_FreeFont },
+	{ "DrawBackground", trap_DrawBackground },
 	{ "FreeImage", trap_FreeImage },
+
+	/* Text functions */
+	{ "LoadFont", trap_LoadFont },
+	{ "DrawText", trap_DrawText },
+	{ "FreeFont", trap_FreeFont },
+
+	/* Draw functions */
 	{ "SetColor", trap_SetColor },
 	{ "Clear", trap_Clear },
 	{ "DrawLine", trap_DrawLine },
 	{ "DrawRect", trap_DrawRect },
 	{ "FillRect", trap_FillRect },
-	{ "DrawPoint", trap_DrawPoint },
 
+	/* Sound functions */
+	{ "LoadSound", trap_LoadSound },
+	{ "PlaySound", trap_PlaySound },
+	{ "LoopSound", trap_LoopSound },
+	{ "PauseSound", trap_PauseSound },
+	{ "ResumeSound", trap_ResumeSound },
+	{ "StopSound", trap_StopSound },
+	{ "FreeSound", trap_FreeSound },
+	{ "PauseAudio", trap_PauseAudio },
+	{ "ResumeAudio", trap_ResumeAudio },
+	{ "StopAudio", trap_StopAudio },
+	{ "GetVolume", trap_GetVolume },
+	{ "SetVolume", trap_SetVolume },
+	{ "MuteAudio", trap_MuteAudio },
+	{ "UnmuteAudio", trap_UnmuteAudio },
+
+	/* Filesystem functions */
+	{ "LoadData", trap_LoadData },
+	{ "LoadFile", trap_LoadFile },
+	{ "SaveFile", trap_SaveFile },
+	{ "CheckFile", trap_CheckFile },
+	{ "RenameFile", trap_RenameFile },
+	{ "RemoveFile", trap_RemoveFile },
+	{ "MakeDirectory", trap_MakeDirectory },
 	{ "OpenFile", trap_OpenFile },
 	{ "ReadFile", trap_ReadFile },
 	{ "WriteFile", trap_WriteFile },
 	{ "IsEof", trap_IsEof },
 	{ "SeekFile", trap_SeekFile },
-	{ "CloseFile", trap_CloseFile },
-	{ "RenameFile", trap_RenameFile },
-	{ "RemoveFile", trap_RemoveFile },
-	{ "MakeDirectory", trap_MakeDirectory },
-	{ "RemoveDirectory", trap_RemoveDirectory },
-
-	{ "GetWindowSize", trap_GetWindowSize },
-
-	{ "LoadSound", trap_LoadSound },
-	{ "PlaySound", trap_PlaySound },
-	{ "LoopSound", trap_LoopSound },
-	{ "FreeSound", trap_FreeSound },
-	{ "PauseSound", trap_PauseSound },
-	{ "ResumeSound", trap_ResumeSound },
-	{ "StopSound", trap_StopSound },
-
-	{ "GetTicks", trap_GetTicks },
-
-	{ "ReadGameFile", trap_ReadGameFile },
-	{ "ReadDataFile", trap_ReadDataFile },
-	
-	{ "MessageBox", trap_MessageBox },
-
-	{ "PauseAudio", trap_PauseAudio },
-	{ "ResumeAudio", trap_ResumeAudio },
-	{ "StopAudio", trap_StopAudio },
-
-	{ "GetVolume", trap_GetVolume },
-	{ "SetVolume", trap_SetVolume },
-
-	{ "MuteAudio", trap_MuteAudio },
-	{ "UnmuteAudio", trap_UnmuteAudio },
-
-	{ "WriteDataFile", trap_WriteDataFile },
-
 	{ "TellFile", trap_TellFile },
-
-	{ "CheckDataFile", trap_CheckDataFile },
-	{ "Gamepath", trap_Gamepath },
-	{ "Datapath", trap_Datapath },
-	{ "AppendDataFile", trap_AppendDataFile },
+	{ "CloseFile", trap_CloseFile },
+	{ "ReadDirectory", trap_ReadDirectory },
 	{ "IsFile", trap_IsFile },
 	{ "IsDirectory", trap_IsDirectory },
-	{ "ReadDirectory", trap_ReadDirectory },
-
-	{ "Basepath", trap_Basepath },
-	{ "ReadBaseFile", trap_ReadBaseFile },
 	
+	/* Other functions */
+	{ "Call", trap_Call },
+	{ "MessageBox", trap_MessageBox },
+	{ "Get", trap_Get },
+	{ "Set", trap_Set },
+	{ "GetWindowSize", trap_GetWindowSize },
+	{ "GetTicks", trap_GetTicks },
+	{ "GetPlatform", trap_GetPlatform },
+	{ "Quit", trap_Quit },
+
 	{ NULL, NULL }
 };
 

@@ -171,7 +171,7 @@ sound_t	*sound_load(const char *file)
 	}
 
 	wav_spec = audio_spec;
-	src_spec = SDL_LoadWAV(file, &wav_spec, &s->buf, &s->len);
+	src_spec = SDL_LoadWAV_RW(unz_open(file), 1, &wav_spec, &s->buf, &s->len);
 	if (src_spec == NULL)
 		FATAL(SDL_GetError());
 

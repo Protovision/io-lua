@@ -1,7 +1,7 @@
 #include "common.h"
 
 const char	*platform;
-var_t		*c_basepath, *c_gamepath, *c_datapath, *c_fps,
+var_t		*c_basezip, *c_gamezip, *c_datapath, *c_fps,
 		*c_fontsize, *c_fontfamily, *c_fgcolor, *c_bgcolor,
 		*c_title;
 
@@ -35,14 +35,14 @@ void	common_init(int argc, char *argv[])
 	platform = SDL_GetPlatform();
 	s = SDL_GetBasePath();
 
-	c_basepath = var_get("basepath");
-	if (c_basepath == NULL) {
-		c_basepath = var_set("basepath", va("%sbase", s));
+	c_basezip = var_get("base");
+	if (c_basezip == NULL) {
+		c_basezip = var_set("base", va("%sbase.zip", s));
 	}
 
-	c_gamepath = var_get("gamepath");
-	if (c_gamepath == NULL) {
-		c_gamepath = var_set("gamepath", va("%sgame", s));
+	c_gamezip = var_get("game");
+	if (c_gamezip == NULL) {
+		c_gamezip = var_set("game", va("%sgame.zip", s));
 	}
 
 	SDL_free(s);
@@ -56,7 +56,8 @@ void	common_init(int argc, char *argv[])
 	}
 
 	var_load(common_vars);
-
+	
+	unz_init();
 	event_init();
 	font_init();
 	image_init();
@@ -71,6 +72,7 @@ void	common_shutdown()
 	image_shutdown();
 	font_shutdown();
 	event_shutdown();
+	unz_shutdown();
 	var_shutdown();
 	mem_shutdown();
 }

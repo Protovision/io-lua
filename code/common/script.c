@@ -26,12 +26,13 @@ void	script_init()
 	luaL_requiref(lua, "math", luaopen_math, 1);
 	luaL_requiref(lua, "debug", luaopen_debug, 1);
 	lua_pop(lua, 7);
-
+/*
 	lua_getglobal(lua, "package");
 	lua_pushstring(lua, "path");
 	lua_pushstring(lua, gamepath("?.lua"));
 	lua_settable(lua, 1);
 	lua_settop(lua, 0);
+*/
 
 }
 
@@ -40,11 +41,19 @@ void	script_shutdown()
 	lua_close(lua);
 }
 
-void	script_load(const char *luafile)
+int	script_load(const char *luafile)
 {
-	if (luaL_dofile(lua, luafile)) {
+	char *data;
+	int top1, top2;
+
+	data = unz_load(luafile);
+	top1 = lua_gettop(lua);
+	if (luaL_dostring(lua, data)) {
 		FATAL(lua_tostring(lua, -1));
 	}
+	top2 = lua_gettop(lua);
+	free(data);
+	return top2-top1;
 }
 
 void	script_register(const char *cmdname, int (*func)(lua_State*))

@@ -4,19 +4,16 @@
 
 void	init(int argc, char *argv[])
 {
-	const char *path;
-
 	common_init(argc, argv);
 
-	path = gamepath("config.lua");
-	if (sys_exists(path)) {
-		script_load(path);
+	if (unz_exists("config.lua")) {
+		script_load("config.lua");
 	}
 
 	audio_init();
 	video_init();
 	base_init();
-	script_load( gamepath("game.lua") );
+	script_load("game.lua");
 	script_call("init", NULL);
 }
 

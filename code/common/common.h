@@ -226,7 +226,7 @@ void	var_load(gameVar_t *vars);
 void	script_init();
 void	script_shutdown();
 
-void	script_load(const char *luafile);
+int	script_load(const char *luafile);
 void	script_register(const char *cmdname, int (*func)(lua_State*));
 void	script_call(const char *func, const char *fmt, ...);
 
@@ -262,13 +262,17 @@ void	*mem_realloc(void *ptr, size_t size);
 void	mem_free(void *ptr);
 char	*mem_strdup(const char *s);
 
+/* =====================================================
+ * font.c
+ * =====================================================
+ */
 
 #define	FONT	TTF_Font
 
 #define		font_init()		(TTF_Init())
 #define		font_shutdown()		(TTF_Quit())
 #define		font_free(F)		(TTF_CloseFont((F)))
-#define		font_load(F,S)		(TTF_OpenFont((F),(S)))
+FONT		*font_load(const char *filename, int size);
 
 /* =====================================================
  * image.c
@@ -291,8 +295,8 @@ void		image_colorize(SDL_Texture *img, Uint32 hue);
 
 char	*va(const char *fmt, ...);
 char	*pathjoin(const char *base, const char *path);
-#define basepath(p)	(pathjoin(c_basepath->string, (p)))
-#define gamepath(p)	(pathjoin(c_gamepath->string, (p)))
+//#define basepath(p)	(pathjoin(c_basepath->string, (p)))
+//#define gamepath(p)	(pathjoin(c_gamepath->string, (p)))
 #define datapath(p)	(pathjoin(c_datapath->string, (p)))
 
 /* ====================================================
@@ -314,9 +318,19 @@ void	base_init();
 void	base_shutdown();
 
 extern	const char *platform;
-extern	var_t *c_basepath, *c_gamepath, *c_datapath,
+extern	var_t *c_basezip, *c_gamezip, *c_datapath,
 	*c_fps, *c_fontsize, *c_fontfamily, *c_fgcolor, *c_bgcolor,
 	*c_title;
 
+/* ====================================================
+ * unz.c
+ * ====================================================
+ */
+	
+void		unz_init();
+void		unz_shutdown();
+int		unz_exists(const char *filename);
+SDL_RWops	*unz_open(const char *filename);
+char		*unz_load(const char *filename);
 
 #endif

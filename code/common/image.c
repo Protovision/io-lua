@@ -7,7 +7,8 @@ SDL_Texture	*image_load(const char *file)
 	SDL_Surface *surface;
 	extern SDL_Renderer *v_renderer;
 
-	surface = IMG_Load(file);
+	surface = IMG_Load_RW(unz_open(file), 1);
+
 	if (surface == NULL) {
 		FATAL(IMG_GetError());
 	}
