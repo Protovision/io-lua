@@ -1,4 +1,4 @@
-#include "common/common.h"
+#include "common.h"
 
 #define	_EVENT_MAX	256
 static event_t		events[_EVENT_MAX];

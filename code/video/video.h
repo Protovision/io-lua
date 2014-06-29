@@ -1,7 +1,7 @@
 #ifndef SCR_H
 #define SCR_H
 
-#include "common/common.h"
+#include "common.h"
 
 void	video_init();
 void	video_shutdown();

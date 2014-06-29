@@ -1,5 +1,5 @@
-#include "common/common.h"
-#include "unzip/unzip.h"
+#include "common.h"
+#include "unzip.h"
 
 static unzFile	basezip, gamezip;
 

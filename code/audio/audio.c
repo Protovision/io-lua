@@ -37,16 +37,18 @@ void	audio_init()
 
 	if (!SDL_WasInit(SDL_INIT_AUDIO)) {
 		if (SDL_InitSubSystem(SDL_INIT_AUDIO))
-			FATAL("Failed to initialize audio: %s", SDL_GetError());
+			FATAL(SDL_GetError());
 	}
 
-	sound_init();
+	Mix_Init(MIX_INIT_OGG);
+
+//	sound_init();
 
 	device = SDL_GetAudioDeviceName(s_device->integer, 0);
 	driver = SDL_GetAudioDriver(s_driver->integer);
 
 	if (SDL_AudioInit(driver))
-		FATAL("Failed to initialize audio driver: %s", SDL_GetError());
+		FATAL(SDL_GetError());
 
 	memset(&desired, 0, sizeof(desired));
 	desired.freq = s_freq->integer;
@@ -57,82 +59,34 @@ void	audio_init()
 	}
 	desired.channels = s_channels->integer;
 	desired.samples = s_samples->integer;
-	desired.callback = audio_callback;
+	//desired.callback = audio_callback;
 
-	dev = SDL_OpenAudioDevice(device, 0, &desired, &audio_spec, SDL_AUDIO_ALLOW_ANY_CHANGE);
-	if (dev == 0)
-		FATAL("Failed to open audio device: %s", SDL_GetError());	
+	if (Mix_OpenAudio(desired.freq, desired.format, desired.channels, desired.samples))
+		FATAL(Mix_GetError());
 
-	
-	SDL_PauseAudioDevice(dev, 0);
+	if (Mix_AllocateChannels(16) < 16)
+		FATAL(Mix_GetError());
+
+	Mix_Resume(-1);
 }
 
 void	audio_shutdown()
 {
-	SDL_PauseAudioDevice(dev, 1);
-	SDL_CloseAudioDevice(dev);
+	Mix_Pause(-1);
+	Mix_CloseAudio();
 	SDL_AudioQuit();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);	
 }
 
-void	audio_lock()
-{
-	SDL_LockAudioDevice(dev);
-}
-
-void	audio_unlock()
-{
-	SDL_UnlockAudioDevice(dev);
-}
-
-void	audio_pause()
-{
-	audio_lock();
-	SDL_PauseAudioDevice(dev, 1);
-	audio_unlock();		
-}
-
-void	audio_resume()
-{
-	audio_lock();
-	SDL_PauseAudioDevice(dev, 0);
-	audio_unlock();
-}
-
-void	audio_stop()
-{
-	extern void channel_clear();
-
-	audio_lock();
-	channel_clear();
-	audio_unlock();	
-}
-
-void	audio_set_volume(int vol)
-{
-	float real_volume;
-
-	real_volume = (float)vol / 100.0f;
-	audio_lock();
-	var_set("s_volume", va("%f", real_volume));
-	audio_unlock();
-}
-
-int	audio_get_volume()
-{
-	return (int)(s_volume->real * 100);
-}
+static int old_volume;
 
 void	audio_mute()
 {
-	audio_lock();
-	var_set("s_mute", "1");
-	audio_unlock();
+	old_volume = audio_get_volume();
+	audio_set_volume(0);
 }
 
 void	audio_unmute()
 {
-	audio_lock();
-	var_set("s_mute", "0");
-	audio_unlock();
+	audio_set_volume(old_volume);
 }

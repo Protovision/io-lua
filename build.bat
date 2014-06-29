@@ -1,8 +1,8 @@
 @echo off
-cl /nologo /TC /D _WINDOWS /I code /I libs/windows/include/SDL2 /I libs/lua code\common\*.c code\video\*.c code\sys\*.c code\audio\*.c code\unzip\*.c code\zlib\*.c /MD /link libs/windows/lib/*.lib /SUBSYSTEM:CONSOLE /OUT:io-lua.exe
+cl /nologo /TC /D _WINDOWS /D __WIN32__ /I static\windows /I code\common /I code\audio /I code\video /I code\libs\SDL2 /I code\libs\SDL2_ttf /I code\libs\SDL2_image /I code\libs\SDL2_mixer /I code\libs\lua /I code\libs\unzip /I code\libs\zlib code\common\*.c code\video\*.c code\sys\*.c code\audio\*.c code\libs\unzip\*.c /MD /link static\windows\*.lib /SUBSYSTEM:CONSOLE /OUT:io-lua.exe
 del /q *.obj
 if not exist build mkdir build
-copy libs\windows\dll\*.dll build
+copy static\windows\*.dll build
 copy game.zip build
 copy base.zip build
 move io-lua.exe build

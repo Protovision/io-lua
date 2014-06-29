@@ -1,23 +1,21 @@
-#include "common/common.h"
-#include "video/video.h"
+#include "common.h"
+#include "video.h"
 
-SDL_Texture	*image_load(const char *file) 
+SDL_Texture	*image_load(const char *file)
 {
 	SDL_Texture *texture;
 	SDL_Surface *surface;
 	extern SDL_Renderer *v_renderer;
 
 	surface = IMG_Load_RW(unz_open(file), 1);
-
-	if (surface == NULL) {
+	if (surface == NULL)
 		FATAL(IMG_GetError());
-	}
+	
 	texture = SDL_CreateTextureFromSurface(v_renderer, surface);
-	if (texture == NULL) {
+	if (texture == NULL)
 		FATAL(SDL_GetError());
-	}
-	SDL_FreeSurface(surface);
 
+	SDL_FreeSurface(surface);
 	return texture;	
 }
 

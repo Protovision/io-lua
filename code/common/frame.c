@@ -1,5 +1,5 @@
-#include "common/common.h"
-#include "video/video.h"
+#include "common.h"
+#include "video.h"
 
 static void	input()
 {

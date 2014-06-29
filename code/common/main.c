@@ -1,6 +1,6 @@
-#include "common/common.h"
-#include "video/video.h"
-#include "audio/audio.h"
+#include "common.h"
+#include "video.h"
+#include "audio.h"
 
 void	init(int argc, char *argv[])
 {

@@ -1,6 +1,6 @@
 #ifdef __APPLE__
 
-#include "common/common.h"
+#include "common.h"
 
 #include <TargetConditionals.h>
 

@@ -1,6 +1,6 @@
-#include "common/common.h"
-#include "audio/audio.h"
-#include "video/video.h"
+#include "common.h"
+#include "audio.h"
+#include "video.h"
 
 typedef struct {
 	const char *name;

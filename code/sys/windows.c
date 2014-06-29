@@ -1,6 +1,6 @@
 #ifdef _WINDOWS
 
-#include "common/common.h"
+#include "common.h"
 
 void	sys_copy(const char *from, const char *to)
 {

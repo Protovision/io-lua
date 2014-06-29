@@ -1,4 +1,4 @@
-#include "common/common.h"
+#include "common.h"
 
 TTF_Font	*font_load(const char *filename, int size)
 {

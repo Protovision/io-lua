@@ -1,4 +1,4 @@
-#include "common/common.h"
+#include "common.h"
 
 #define VAR_HASHTABLE_SIZE	64	
 #define VAR_MAX			128

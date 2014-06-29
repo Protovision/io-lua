@@ -1,6 +1,6 @@
-#include "common/common.h"
-#include "video/video.h"
-#include "audio/audio.h"
+#include "common.h"
+#include "video.h"
+#include "audio.h"
 
 void	trap_args(lua_State *s, const char *funcname, const char *fmt, ...)
 {
@@ -365,7 +365,7 @@ int	trap_GetWindowSize(lua_State *s)
 int	trap_LoadSound(lua_State *s)
 {
 	const char *filename;
-	sound_t *w;
+	SOUND *w;
 
 	trap_args(s, "LoadSound", "s", &filename);
 	w = sound_load(filename);
@@ -375,29 +375,29 @@ int	trap_LoadSound(lua_State *s)
 
 int	trap_PlaySound(lua_State *s)
 {
-	sound_t *w;
-	channel_t *c;	
+	SOUND *w;
+	CHANNEL c;	
 
 	trap_args(s, "PlaySound", "p", &w);
 	c = sound_play(w, 0);
-	lua_pushlightuserdata(s, c);
+	lua_pushlightuserdata(s, (void*)c);
 	return 1;
 }
 
 int	trap_LoopSound(lua_State *s)
 {
-	sound_t *w;
-	channel_t *c;
+	SOUND *w;
+	CHANNEL c;
 
 	trap_args(s, "LoopSound", "p", &w);
 	c = sound_play(w, 1);
-	lua_pushlightuserdata(s, c);
+	lua_pushlightuserdata(s, (void*)c);
 	return 1;
 }
 
 int	trap_FreeSound(lua_State *s)
 {
-	sound_t *w;
+	SOUND *w;
 	
 	trap_args(s, "FreeSound", "p", &w);
 	sound_free(w);
@@ -406,7 +406,7 @@ int	trap_FreeSound(lua_State *s)
 
 int	trap_PauseSound(lua_State *s)
 {
-	channel_t *c;
+	CHANNEL c;
 
 	trap_args(s, "PauseSound", "p", &c);
 	sound_pause(c);
@@ -415,7 +415,7 @@ int	trap_PauseSound(lua_State *s)
 
 int	trap_ResumeSound(lua_State *s)
 {
-	channel_t *c;
+	CHANNEL c;
 
 	trap_args(s, "ResumeSound", "p", &c);
 	sound_resume(c);
@@ -424,7 +424,7 @@ int	trap_ResumeSound(lua_State *s)
 
 int	trap_StopSound(lua_State *s)
 {
-	channel_t *c;
+	CHANNEL c;
 
 	trap_args(s, "StopSound", "p", &c);
 	sound_stop(c);
