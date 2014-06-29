@@ -23,6 +23,29 @@ void	video_drawImage(int x, int y, IMAGE *image, int w, int h)
 	SDL_RenderCopy(v_renderer, image, NULL, &r);	
 }
 
+void	video_drawClip(int dstx, int dsty, IMAGE *image, int x, int y, int w, int h, int scalew, int scaleh)
+{
+	SDL_Rect src, dst;
+	extern SDL_Renderer *v_renderer;
+
+	src.x = x;
+	src.y = y;
+	src.w = w;
+	src.h = h;
+	
+	dst.x = dstx;
+	dst.y = dsty;
+	if (scalew && scaleh) {
+		dst.w = scalew;
+		dst.h = scaleh;
+	} else {
+		dst.w = w;
+		dst.h = h;
+	}
+	
+	SDL_RenderCopy(v_renderer, image, &src, &dst);	
+}
+
 void	video_drawText(int x, int y, const char *text, FONT *font, unsigned int color)
 {
 	SDL_Surface *surface;

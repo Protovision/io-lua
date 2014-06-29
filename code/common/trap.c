@@ -613,6 +613,62 @@ int	trap_Call(lua_State *s)
 	return returned;
 }
 
+int	trap_LoadCursor(lua_State *s)
+{
+	CURSOR *cursor;
+	const char *imagefile;
+	int hotx, hoty;
+
+	trap_args(s, "LoadCursor", "sii", &imagefile, &hotx, &hoty);
+	cursor = cursor_load(imagefile, hotx, hoty);
+	lua_pushlightuserdata(s, cursor);
+	return 1;
+}
+
+int	trap_GetCursor(lua_State *s)
+{
+	lua_pushlightuserdata(s, cursor_get());
+	return 1;
+}
+
+int	trap_SetCursor(lua_State *s)
+{
+	CURSOR *cursor;
+	
+	trap_args(s, "SetCursor", "p", &cursor);
+	cursor_set(cursor);
+	return 0;
+}
+
+int	trap_FreeCursor(lua_State *s)
+{
+	CURSOR *cursor;
+
+	trap_args(s, "FreeCursor", "p", &cursor);
+	cursor_free(cursor);
+	return 0;
+}
+
+int	trap_GetMousePosition(lua_State *s)
+{
+	int x, y;
+	
+	SDL_GetMouseState(&x, &y);
+	lua_pushinteger(s, x);
+	lua_pushinteger(s, y);
+	return 2;
+}
+
+int	trap_DrawClip(lua_State *s)
+{
+	IMAGE *image;
+	int srcx, srcy, srcw, srch, dstx, dsty, dstw, dsth;
+
+	trap_args(s, "DrawClip", "iipiiiiii", &dstx, &dsty, &image, &srcx, &srcy, &srcw, &srch, &dstw, &dsth);
+	video_drawClip(dstx, dsty, image, srcx, srcy, srcw, srch, dstw, dsth);
+	return 0;
+}
+
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -623,6 +679,7 @@ trap_t syscalls[] = {
 	/* Image functions */
 	{ "LoadImage", trap_LoadImage },
 	{ "DrawImage", trap_DrawImage },
+	{ "DrawClip", trap_DrawClip },
 	{ "DrawBackground", trap_DrawBackground },
 	{ "FreeImage", trap_FreeImage },
 
@@ -630,6 +687,12 @@ trap_t syscalls[] = {
 	{ "LoadFont", trap_LoadFont },
 	{ "DrawText", trap_DrawText },
 	{ "FreeFont", trap_FreeFont },
+
+	/* Cursor functions */
+	{ "LoadCursor", trap_LoadCursor },
+	{ "GetCursor", trap_GetCursor },
+	{ "SetCursor", trap_SetCursor },
+	{ "FreeCursor", trap_FreeCursor },
 
 	/* Draw functions */
 	{ "SetColor", trap_SetColor },
@@ -679,6 +742,7 @@ trap_t syscalls[] = {
 	{ "Get", trap_Get },
 	{ "Set", trap_Set },
 	{ "GetWindowSize", trap_GetWindowSize },
+	{ "GetMousePosition", trap_GetMousePosition },
 	{ "GetTicks", trap_GetTicks },
 	{ "GetPlatform", trap_GetPlatform },
 	{ "Quit", trap_Quit },

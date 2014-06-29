@@ -334,4 +334,16 @@ int		unz_exists(const char *filename);
 SDL_RWops	*unz_open(const char *filename);
 char		*unz_load(const char *filename);
 
+/* ====================================================
+ * cursor.c
+ * ====================================================
+ */
+
+#define	CURSOR		SDL_Cursor
+#define	cursor_get()	(SDL_GetCursor())
+#define	cursor_set(C)	(SDL_SetCursor((C)))
+#define	cursor_free(C)	(SDL_FreeCursor((C)))
+
+CURSOR	*cursor_load(const char *filename, int hotx, int hoty);
+
 #endif

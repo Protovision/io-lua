@@ -10,6 +10,7 @@ void	video_getWindowSize(int *x, int *y);
 void	video_drawText(int x, int y, const char *text, FONT *font, unsigned int color);
 void	video_drawBackground(IMAGE *img);
 void	video_drawImage(int x, int y, IMAGE *image, int w, int h);
+void	video_drawClip(int dstx, int dsty, IMAGE *image, int srcx, int srcy, int srcw, int srch, int dstw, int dsth);
 void	video_render();
 void	video_setColor(unsigned long int color);
 void	video_clear();
