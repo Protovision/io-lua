@@ -66,7 +66,6 @@ void	video_init()
 
 	SDL_SetRenderDrawBlendMode(v_renderer, SDL_BLENDMODE_BLEND);
 	SDL_SetWindowGrab(v_window, v_grab->integer);
-	SDL_SetWindowBrightness(v_window, v_brightness->real);
 	SDL_SetWindowFullscreen(v_window, v_fullscreen->integer ? SDL_WINDOW_FULLSCREEN : 0);
 }
 
@@ -82,4 +81,16 @@ void	video_shutdown()
 	}
 	SDL_VideoQuit();
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
+}
+
+void	video_setFullscreen(int boolean)
+{
+	SDL_SetWindowFullscreen(v_window, boolean ? SDL_WINDOW_FULLSCREEN : 0);
+	var_set("v_fullscreen", va("%d", boolean));
+}
+
+void	video_setGrab(int boolean)
+{
+	SDL_SetWindowGrab(v_window, boolean);
+	var_set("v_grab", va("%d", boolean));
 }
