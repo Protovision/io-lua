@@ -669,24 +669,6 @@ int	trap_DrawClip(lua_State *s)
 	return 0;
 }
 
-int	trap_SetFullscreen(lua_State *s)
-{
-	int i;
-
-	trap_args(s, "SetFullscreen", "b", &i);
-	video_setFullscreen(i);
-	return 0;		
-}
-
-int	trap_SetGrab(lua_State *s)
-{
-	int i;
-	
-	trap_args(s, "SetGrab", "b", &i);
-	video_setGrab(i);
-	return 0;
-}
-
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -755,8 +737,6 @@ trap_t syscalls[] = {
 	{ "IsDirectory", trap_IsDirectory },
 
 	/* Window functions */
-	{ "SetFullscreen", trap_SetFullscreen },
-	{ "SetGrab", trap_SetGrab },
 	{ "GetWindowSize", trap_GetWindowSize },
 	
 	/* Other functions */

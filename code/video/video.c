@@ -82,15 +82,3 @@ void	video_shutdown()
 	SDL_VideoQuit();
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
-
-void	video_setFullscreen(int boolean)
-{
-	SDL_SetWindowFullscreen(v_window, boolean ? SDL_WINDOW_FULLSCREEN : 0);
-	var_set("v_fullscreen", va("%d", boolean));
-}
-
-void	video_setGrab(int boolean)
-{
-	SDL_SetWindowGrab(v_window, boolean);
-	var_set("v_grab", va("%d", boolean));
-}

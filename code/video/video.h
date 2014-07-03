@@ -6,8 +6,6 @@
 void	video_init();
 void	video_shutdown();
 
-void	video_setFullscreen(int boolean);
-void	video_setGrab(int boolean);
 void	video_getWindowSize(int *x, int *y);
 void	video_drawText(int x, int y, const char *text, FONT *font, unsigned int color);
 void	video_drawBackground(IMAGE *img);
