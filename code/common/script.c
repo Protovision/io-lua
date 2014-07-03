@@ -49,7 +49,7 @@ int	script_load(const char *luafile)
 	data = unz_load(luafile);
 	top1 = lua_gettop(lua);
 	if (luaL_dostring(lua, data)) {
-		FATAL(lua_tostring(lua, -1));
+		FATAL("Error in %s:\n%s", luafile, lua_tostring(lua, -1));
 	}
 	top2 = lua_gettop(lua);
 	free(data);
