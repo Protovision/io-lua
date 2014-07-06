@@ -29,7 +29,7 @@ void	video_init()
 	v_driver = var_get("v_driver");
 	v_renderDriver = var_get("v_renderer");
 	
-	if (strcmp(platform, "Mac OS X") == 0) {
+	if (strcmp(platform, "Mac OS X") == 0 || strcmp(platform, "iOS") == 0) {
 		if (v_driver == NULL)
 			v_driver = var_set("v_driver", "0");
 		if (v_renderDriver == NULL) 

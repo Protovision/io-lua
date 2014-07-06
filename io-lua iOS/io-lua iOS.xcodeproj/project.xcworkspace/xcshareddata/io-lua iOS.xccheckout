@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B7F11DAD-6D83-4819-B039-8361CDFB62E3</string>
+	<key>IDESourceControlProjectName</key>
+	<string>io-lua iOS</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F8AE690F-8D50-402B-864D-D9D1EDD6A7A4</key>
+		<string>https://github.com/protovision/io-lua</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>io-lua iOS/io-lua iOS.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F8AE690F-8D50-402B-864D-D9D1EDD6A7A4</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/protovision/io-lua</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F8AE690F-8D50-402B-864D-D9D1EDD6A7A4</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F8AE690F-8D50-402B-864D-D9D1EDD6A7A4</string>
+			<key>IDESourceControlWCCName</key>
+			<string>io-lua</string>
+		</dict>
+	</array>
+</dict>
+</plist>

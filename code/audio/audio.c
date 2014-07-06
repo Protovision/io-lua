@@ -30,7 +30,11 @@ void	audio_init()
 	if (s_driver == NULL) {	
 		if (strcmp(platform, "Windows") == 0) {
 			s_driver = var_set("s_driver", "2");
-		} else if (strcmp(platform, "Mac OS X") == 0 || strcmp(platform, "Linux") == 0) {
+		} else if (
+			strcmp(platform, "Mac OS X") == 0 ||
+			strcmp(platform, "Linux") == 0 ||
+			strcmp(platform, "iOS") == 0
+		) {
 			s_driver = var_set("s_driver", "0");
 		}
 	}
