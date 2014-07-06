@@ -669,6 +669,27 @@ int	trap_DrawClip(lua_State *s)
 	return 0;
 }
 
+int	trap_GetSoundVolume(lua_State *s)
+{
+	int volume;
+	CHANNEL c;
+		
+	trap_args(s, "GetSoundVolume", "p", &c);
+	volume = sound_get_volume(c);
+	lua_pushinteger(s, volume);
+	return 1;
+}
+
+int	trap_SetSoundVolume(lua_State *s)
+{
+	int volume;
+	CHANNEL c;
+
+	trap_args(s, "SetSoundVolume", "pi", &c, &volume);
+	sound_set_volume(c, volume);
+	return 0;
+}
+
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -708,6 +729,8 @@ trap_t syscalls[] = {
 	{ "PauseSound", trap_PauseSound },
 	{ "ResumeSound", trap_ResumeSound },
 	{ "StopSound", trap_StopSound },
+	{ "GetSoundVolume", trap_GetSoundVolume },
+	{ "SetSoundVolume", trap_SetSoundVolume },
 	{ "FreeSound", trap_FreeSound },
 	{ "PauseAudio", trap_PauseAudio },
 	{ "ResumeAudio", trap_ResumeAudio },

@@ -18,10 +18,12 @@ void	audio_unmute();
 #define SOUND	Mix_Chunk
 #define	CHANNEL	int
 
-#define sound_free(s)	Mix_FreeChunk(s)
-#define	sound_pause(c)	Mix_Pause(c)
-#define sound_resume(c)	Mix_Resume(c)
-#define sound_stop(c)	Mix_HaltChannel(c)
+#define sound_free(s)		Mix_FreeChunk(s)
+#define	sound_pause(c)		Mix_Pause(c)
+#define sound_resume(c)		Mix_Resume(c)
+#define sound_stop(c)		Mix_HaltChannel(c)
+#define sound_set_volume(c, v)	Mix_Volume(c, v)
+#define sound_get_volume(c)	Mix_Volume(c, -1)
 
 SOUND		*sound_load(const char *file);
 CHANNEL		sound_play(SOUND *s, int loop);
