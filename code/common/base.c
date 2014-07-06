@@ -75,6 +75,7 @@ static game_resources_t game_resources[] = {
 
 static const char *game_scripts[] = {
 	"scripts/constants.lua",
+	"scripts/require.lua",
 	NULL
 };
 
