@@ -4,6 +4,12 @@ IO-LUA is a 2D game engine for Lua.
 
 Current platform support: Linux, Mac OS X, Windows
 
+You can download the precompiled game engine:
+
+Windows: http://abacus.subluminal.net/~jakashthree/io-lua%20windows.zip
+Mac OS X: http://abacus.subluminal.net/~jakashthree/io-lua%20macosx.zip
+Linux: http://abacus.subluminal.net/~jakashthree/io-lua%20linux.zip
+
 Compiling for Linux or Mac OS X:
 	make
 
