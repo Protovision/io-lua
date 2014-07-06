@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4DD6A4F81969C66E005F9366 /* game.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4DD6A4F71969C66E005F9366 /* game.zip */; };
 		4DE8BC221969B7B800BBFAAF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DE8BC211969B7B800BBFAAF /* Foundation.framework */; };
 		4DE8BC241969B7B800BBFAAF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DE8BC231969B7B800BBFAAF /* CoreGraphics.framework */; };
 		4DE8BC261969B7B800BBFAAF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DE8BC251969B7B800BBFAAF /* UIKit.framework */; };
@@ -50,7 +51,6 @@
 		4DE8BD071969B9A700BBFAAF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DE8BD061969B9A700BBFAAF /* CoreFoundation.framework */; };
 		4DE8BD091969B9AC00BBFAAF /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DE8BD081969B9AC00BBFAAF /* CoreImage.framework */; };
 		4DE8BD0B1969B9CC00BBFAAF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DE8BD0A1969B9CC00BBFAAF /* QuartzCore.framework */; };
-		4DE8BD0E1969BA1300BBFAAF /* game.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4DE8BD0C1969BA1300BBFAAF /* game.zip */; };
 		4DE8BD0F1969BA1300BBFAAF /* base.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4DE8BD0D1969BA1300BBFAAF /* base.zip */; };
 		4DE8BD131969BB2600BBFAAF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DE8BD121969BB2600BBFAAF /* AudioToolbox.framework */; };
 		4DE8BD151969BB2F00BBFAAF /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DE8BD141969BB2F00BBFAAF /* OpenGLES.framework */; };
@@ -69,6 +69,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4DD6A4F71969C66E005F9366 /* game.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = game.zip; path = ../game.zip; sourceTree = "<group>"; };
 		4DE8BC1E1969B7B800BBFAAF /* io-lua iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "io-lua iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DE8BC211969B7B800BBFAAF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4DE8BC231969B7B800BBFAAF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -217,7 +218,6 @@
 		4DE8BD061969B9A700BBFAAF /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		4DE8BD081969B9AC00BBFAAF /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		4DE8BD0A1969B9CC00BBFAAF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		4DE8BD0C1969BA1300BBFAAF /* game.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = game.zip; path = ../game.zip; sourceTree = "<group>"; };
 		4DE8BD0D1969BA1300BBFAAF /* base.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = base.zip; path = ../base.zip; sourceTree = "<group>"; };
 		4DE8BD101969BADF00BBFAAF /* SDL_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDL_config.h; path = ../../../static/ios/SDL_config.h; sourceTree = "<group>"; };
 		4DE8BD111969BADF00BBFAAF /* SDL_config_iphoneos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDL_config_iphoneos.h; path = ../../../static/ios/SDL_config_iphoneos.h; sourceTree = "<group>"; };
@@ -270,7 +270,7 @@
 		4DE8BC151969B7B800BBFAAF = {
 			isa = PBXGroup;
 			children = (
-				4DE8BD0C1969BA1300BBFAAF /* game.zip */,
+				4DD6A4F71969C66E005F9366 /* game.zip */,
 				4DE8BD0D1969BA1300BBFAAF /* base.zip */,
 				4DE8BC271969B7B800BBFAAF /* io-lua iOS */,
 				4DE8BC201969B7B800BBFAAF /* Frameworks */,
@@ -642,7 +642,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DE8BD0E1969BA1300BBFAAF /* game.zip in Resources */,
+				4DD6A4F81969C66E005F9366 /* game.zip in Resources */,
 				4DE8BD0F1969BA1300BBFAAF /* base.zip in Resources */,
 				4DE8BC2C1969B7B800BBFAAF /* InfoPlist.strings in Resources */,
 				4DE8BC341969B7B800BBFAAF /* Images.xcassets in Resources */,
@@ -914,6 +914,7 @@
 				4DE8BC4C1969B7B800BBFAAF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4DE8BC4D1969B7B800BBFAAF /* Build configuration list for PBXNativeTarget "io-lua iOSTests" */ = {
 			isa = XCConfigurationList;
@@ -922,6 +923,7 @@
 				4DE8BC4F1969B7B800BBFAAF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
