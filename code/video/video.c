@@ -65,6 +65,8 @@ void	video_init()
 	}
 
 	SDL_SetRenderDrawBlendMode(v_renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+	SDL_RenderSetLogicalSize(v_renderer, v_width->integer, v_height->integer);
 	SDL_SetWindowGrab(v_window, v_grab->integer);
 	SDL_SetWindowFullscreen(v_window, v_fullscreen->integer ? SDL_WINDOW_FULLSCREEN : 0);
 }

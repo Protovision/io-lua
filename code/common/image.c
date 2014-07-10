@@ -19,6 +19,14 @@ SDL_Texture	*image_load(const char *file)
 	return texture;	
 }
 
+void	image_query(SDL_Texture *image, int *w, int *h)
+{
+	Uint32 format;
+	int access;
+
+	SDL_QueryTexture(image, &format, &access, w, h);
+}
+
 void	image_colorize(SDL_Texture *image, Uint32 hue)
 {
 	SDL_Color color;

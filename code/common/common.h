@@ -273,6 +273,8 @@ char	*mem_strdup(const char *s);
 #define		font_init()		(TTF_Init())
 #define		font_shutdown()		(TTF_Quit())
 #define		font_free(F)		(TTF_CloseFont((F)))
+#define		font_text_size(F,S,W,H)	(TTF_SizeText((F),(S),(W),(H)))
+
 FONT		*font_load(const char *filename, int size);
 
 /* =====================================================
@@ -286,8 +288,9 @@ FONT		*font_load(const char *filename, int size);
 #define		image_shutdown()	(IMG_Quit())
 #define		image_free(I)		(SDL_DestroyTexture((I)))
 
-SDL_Texture	*image_load(const char *file);
-void		image_colorize(SDL_Texture *img, Uint32 hue);
+IMAGE		*image_load(const char *file);
+void		image_query(IMAGE *img, int *w, int *h);
+void		image_colorize(IMAGE *img, Uint32 hue);
 
 /* =====================================================
  * util.c

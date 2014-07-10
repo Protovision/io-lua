@@ -380,7 +380,7 @@ int	trap_PlaySound(lua_State *s)
 
 	trap_args(s, "PlaySound", "p", &w);
 	c = sound_play(w, 0);
-	lua_pushlightuserdata(s, (void*)c);
+	lua_pushinteger(s, c);
 	return 1;
 }
 
@@ -391,7 +391,7 @@ int	trap_LoopSound(lua_State *s)
 
 	trap_args(s, "LoopSound", "p", &w);
 	c = sound_play(w, 1);
-	lua_pushlightuserdata(s, (void*)c);
+	lua_pushinteger(s, c);
 	return 1;
 }
 
@@ -690,6 +690,32 @@ int	trap_SetSoundVolume(lua_State *s)
 	return 0;
 }
 
+int	trap_GetImageSize(lua_State *s)
+{
+	int w, h;
+	IMAGE *image;
+
+	trap_args(s, "GetImageSize", "p", &image);
+	image_query(image, &w, &h);
+	lua_pushinteger(s, w);
+	lua_pushinteger(s, h);
+	return 2;
+}
+
+int	trap_GetTextSize(lua_State *s)
+{
+	FONT *font;
+	const char *text;
+	int w, h;
+
+	trap_args(s, "GetTextSize", "ps", &font, &text);
+	font_text_size(font, text, &w, &h);
+
+	lua_pushinteger(s, w);
+	lua_pushinteger(s, h);
+	return 2;
+}
+
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -702,11 +728,13 @@ trap_t syscalls[] = {
 	{ "DrawImage", trap_DrawImage },
 	{ "DrawClip", trap_DrawClip },
 	{ "DrawBackground", trap_DrawBackground },
+	{ "GetImageSize", trap_GetImageSize },
 	{ "FreeImage", trap_FreeImage },
 
 	/* Text functions */
 	{ "LoadFont", trap_LoadFont },
 	{ "DrawText", trap_DrawText },
+	{ "GetTextSize", trap_GetTextSize },
 	{ "FreeFont", trap_FreeFont },
 
 	/* Cursor functions */
