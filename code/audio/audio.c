@@ -46,8 +46,6 @@ void	audio_init()
 
 	Mix_Init(MIX_INIT_OGG);
 
-//	sound_init();
-
 	device = SDL_GetAudioDeviceName(s_device->integer, 0);
 	driver = SDL_GetAudioDriver(s_driver->integer);
 
@@ -63,7 +61,6 @@ void	audio_init()
 	}
 	desired.channels = s_channels->integer;
 	desired.samples = s_samples->integer;
-	//desired.callback = audio_callback;
 
 	if (Mix_OpenAudio(desired.freq, desired.format, desired.channels, desired.samples))
 		FATAL(Mix_GetError());
@@ -82,15 +79,3 @@ void	audio_shutdown()
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);	
 }
 
-static int old_volume;
-
-void	audio_mute()
-{
-	old_volume = audio_get_volume();
-	audio_set_volume(0);
-}
-
-void	audio_unmute()
-{
-	audio_set_volume(old_volume);
-}

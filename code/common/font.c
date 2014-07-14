@@ -11,3 +11,13 @@ TTF_Font	*font_load(const char *filename, int size)
 
 	return font;
 }
+
+void	font_text_size(TTF_Font *font, const char *text, int *w, int *h)
+{
+	int res;
+
+	res = TTF_SizeText(font, text, w, h);
+	if (res == -1)
+		FATAL(TTF_GetError());
+	
+}

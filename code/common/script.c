@@ -26,14 +26,6 @@ void	script_init()
 	luaL_requiref(lua, "math", luaopen_math, 1);
 	luaL_requiref(lua, "debug", luaopen_debug, 1);
 	lua_pop(lua, 7);
-/*
-	lua_getglobal(lua, "package");
-	lua_pushstring(lua, "path");
-	lua_pushstring(lua, gamepath("?.lua"));
-	lua_settable(lua, 1);
-	lua_settop(lua, 0);
-*/
-
 }
 
 void	script_shutdown()
@@ -49,7 +41,8 @@ int	script_load(const char *luafile)
 	data = unz_load(luafile);
 	top1 = lua_gettop(lua);
 	if (luaL_dostring(lua, data)) {
-		FATAL("Error in %s:\n%s", luafile, lua_tostring(lua, -1));
+		luaL_where(lua, 1);
+		FATAL("%s %s", lua_tostring(lua, -1), lua_tostring(lua, -2));
 	}
 	top2 = lua_gettop(lua);
 	free(data);
@@ -68,7 +61,8 @@ void	script_call(const char *func, const char *fmt, ...)
 
 	if (func == NULL) {
 		if (lua_pcall(lua, 0, 0, 0) != 0) {
-			FATAL(lua_tostring(lua, -1));
+			luaL_where(lua, 1);
+			FATAL("%s %s", lua_tostring(lua, -1), lua_tostring(lua, -2));
 		}
 		return;
 	}
@@ -81,7 +75,8 @@ void	script_call(const char *func, const char *fmt, ...)
 
 	if (fmt == NULL) {
 		if (lua_pcall(lua, 0, 0, 0) != 0) {
-			FATAL(lua_tostring(lua, -1));
+			luaL_where(lua, 1);
+			FATAL("%s %s", lua_tostring(lua, -1), lua_tostring(lua, -2));
 		}
 		return;
 	}
@@ -107,7 +102,8 @@ void	script_call(const char *func, const char *fmt, ...)
 	}
 	va_end(v);
 	if (lua_pcall(lua, i, 0, 0) != 0) {
-		FATAL(lua_tostring(lua, -1));
+		luaL_where(lua, 1);
+		FATAL("%s %s", lua_tostring(lua, -1), lua_tostring(lua, -2));
 	}
 }
 

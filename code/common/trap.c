@@ -376,21 +376,14 @@ int	trap_LoadSound(lua_State *s)
 int	trap_PlaySound(lua_State *s)
 {
 	SOUND *w;
-	CHANNEL c;	
-
-	trap_args(s, "PlaySound", "p", &w);
-	c = sound_play(w, 0);
-	lua_pushinteger(s, c);
-	return 1;
-}
-
-int	trap_LoopSound(lua_State *s)
-{
-	SOUND *w;
 	CHANNEL c;
+	int loop, fadein;
 
-	trap_args(s, "LoopSound", "p", &w);
-	c = sound_play(w, 1);
+	loop = 0;
+	fadein = 0;
+
+	trap_args(s, "PlaySound", "pbi", &w, &loop, &fadein);
+	c = sound_play(w, loop, fadein);
 	lua_pushinteger(s, c);
 	return 1;
 }
@@ -408,7 +401,7 @@ int	trap_PauseSound(lua_State *s)
 {
 	CHANNEL c;
 
-	trap_args(s, "PauseSound", "p", &c);
+	trap_args(s, "PauseSound", "i", &c);
 	sound_pause(c);
 	return 0;
 }
@@ -417,7 +410,7 @@ int	trap_ResumeSound(lua_State *s)
 {
 	CHANNEL c;
 
-	trap_args(s, "ResumeSound", "p", &c);
+	trap_args(s, "ResumeSound", "i", &c);
 	sound_resume(c);
 	return 0;
 }
@@ -426,7 +419,7 @@ int	trap_StopSound(lua_State *s)
 {
 	CHANNEL c;
 
-	trap_args(s, "StopSound", "p", &c);
+	trap_args(s, "StopSound", "i", &c);
 	sound_stop(c);
 	return 0;
 }
@@ -479,52 +472,6 @@ int	trap_MessageBox(lua_State *s)
 	trap_args(s, "MessageBox", "s", &msg);
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "", msg, v_window);
 	SDL_RaiseWindow(v_window);
-	return 0;
-}
-
-int	trap_PauseAudio(lua_State *s)
-{
-	audio_pause();
-	return 0;
-}
-
-int	trap_ResumeAudio(lua_State *s)
-{
-	audio_resume();
-	return 0;
-}
-
-int	trap_StopAudio(lua_State *s)
-{
-	audio_stop();
-	return 0;
-}
-
-int	trap_SetVolume(lua_State *s)
-{
-	int vol;
-
-	trap_args(s, "SetVolume", "i", &vol);
-	if (vol < 0) vol = 0;
-	audio_set_volume(vol);
-	return 0;
-}
-
-int	trap_GetVolume(lua_State *s)
-{
-	lua_pushinteger(s, audio_get_volume());
-	return 1;
-}
-
-int	trap_MuteAudio(lua_State *s)
-{
-	audio_mute();
-	return 0;
-}
-
-int	trap_UnmuteAudio(lua_State *s)
-{
-	audio_unmute();
 	return 0;
 }
 
@@ -674,7 +621,7 @@ int	trap_GetSoundVolume(lua_State *s)
 	int volume;
 	CHANNEL c;
 		
-	trap_args(s, "GetSoundVolume", "p", &c);
+	trap_args(s, "GetSoundVolume", "i", &c);
 	volume = sound_get_volume(c);
 	lua_pushinteger(s, volume);
 	return 1;
@@ -685,7 +632,7 @@ int	trap_SetSoundVolume(lua_State *s)
 	int volume;
 	CHANNEL c;
 
-	trap_args(s, "SetSoundVolume", "pi", &c, &volume);
+	trap_args(s, "SetSoundVolume", "ii", &c, &volume);
 	sound_set_volume(c, volume);
 	return 0;
 }
@@ -708,12 +655,112 @@ int	trap_GetTextSize(lua_State *s)
 	const char *text;
 	int w, h;
 
-	trap_args(s, "GetTextSize", "ps", &font, &text);
+	trap_args(s, "GetTextSize", "sp", &text, &font);
 	font_text_size(font, text, &w, &h);
 
 	lua_pushinteger(s, w);
 	lua_pushinteger(s, h);
 	return 2;
+}
+
+int	trap_FadeSound(lua_State *s)
+{
+	int ms;
+	CHANNEL c;
+	
+	trap_args(s, "FadeSound", "ii", &c, &ms);
+	sound_fade(c, ms);
+	return 0;
+}
+
+int	trap_LoadMusic(lua_State *s)
+{
+	MUSIC *m;
+	const char *file;
+
+	trap_args(s, "LoadMusic", "s", &file);
+	m = music_load(file);
+	lua_pushlightuserdata(s, m);
+	return 1;
+}
+
+int	trap_PlayMusic(lua_State *s)
+{
+	MUSIC *m;
+	int loop, fadein;
+
+	trap_args(s, "PlayMusic", "pbi", &m, &loop, &fadein);
+	music_play(m, loop, fadein);
+	return 0;
+}
+
+int	trap_FreeMusic(lua_State *s)
+{
+	MUSIC *m;
+
+	trap_args(s, "FreeMusic", "p", &m);
+	music_free(m);
+	return 0;
+}
+
+int	trap_PauseMusic(lua_State *s)
+{
+	music_pause();
+	return 0;
+}
+
+int	trap_ResumeMusic(lua_State *s)
+{
+	music_resume();
+	return 0;
+}
+
+int	trap_RewindMusic(lua_State *s)
+{
+	music_rewind();
+	return 0;
+}
+
+int	trap_SeekMusic(lua_State *s)
+{
+	double sec;
+
+	trap_args(s, "SeekMusic", "n", &sec);
+	music_seek(sec);
+	return 0;
+}
+
+int	trap_StopMusic(lua_State *s)
+{
+	music_stop();
+	return 0;
+}
+
+int	trap_FadeMusic(lua_State *s)
+{
+	int ms;
+
+	trap_args(s, "FadeMusic", "i", &ms);
+	music_fade(ms);
+	return 0;
+}
+
+int	trap_GetMusicVolume(lua_State *s)
+{
+	int vol;
+
+	vol = music_get_volume();
+	lua_pushinteger(s, vol);
+	return 1;
+}
+
+int	trap_SetMusicVolume(lua_State *s)
+{
+	int vol;
+
+	trap_args(s, "SetMusicVolume", "i", &vol);
+	music_set_volume(vol);
+	return 0;
 }
 
 typedef struct {
@@ -752,21 +799,27 @@ trap_t syscalls[] = {
 
 	/* Sound functions */
 	{ "LoadSound", trap_LoadSound },
+	{ "FreeSound", trap_FreeSound },
 	{ "PlaySound", trap_PlaySound },
-	{ "LoopSound", trap_LoopSound },
+	{ "FadeSound", trap_FadeSound },
 	{ "PauseSound", trap_PauseSound },
 	{ "ResumeSound", trap_ResumeSound },
 	{ "StopSound", trap_StopSound },
 	{ "GetSoundVolume", trap_GetSoundVolume },
 	{ "SetSoundVolume", trap_SetSoundVolume },
-	{ "FreeSound", trap_FreeSound },
-	{ "PauseAudio", trap_PauseAudio },
-	{ "ResumeAudio", trap_ResumeAudio },
-	{ "StopAudio", trap_StopAudio },
-	{ "GetVolume", trap_GetVolume },
-	{ "SetVolume", trap_SetVolume },
-	{ "MuteAudio", trap_MuteAudio },
-	{ "UnmuteAudio", trap_UnmuteAudio },
+
+	/* Music functions */
+	{ "LoadMusic", trap_LoadMusic },
+	{ "PlayMusic", trap_PlayMusic },
+	{ "FreeMusic", trap_FreeMusic },
+	{ "PauseMusic", trap_PauseMusic },
+	{ "ResumeMusic", trap_ResumeMusic },
+	{ "RewindMusic", trap_RewindMusic },
+	{ "SeekMusic", trap_SeekMusic },
+	{ "StopMusic", trap_StopMusic },
+	{ "FadeMusic", trap_FadeMusic },
+	{ "GetMusicVolume", trap_GetMusicVolume },
+	{ "SetMusicVolume", trap_SetMusicVolume },
 
 	/* Filesystem functions */
 	{ "LoadData", trap_LoadData },

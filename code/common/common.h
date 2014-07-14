@@ -273,9 +273,9 @@ char	*mem_strdup(const char *s);
 #define		font_init()		(TTF_Init())
 #define		font_shutdown()		(TTF_Quit())
 #define		font_free(F)		(TTF_CloseFont((F)))
-#define		font_text_size(F,S,W,H)	(TTF_SizeText((F),(S),(W),(H)))
 
 FONT		*font_load(const char *filename, int size);
+void		font_text_size(FONT *f, const char *text, int *w, int *h);
 
 /* =====================================================
  * image.c
