@@ -287,6 +287,7 @@ void		font_text_size(FONT *f, const char *text, int *w, int *h);
 #define		image_init()		(IMG_Init(IMG_INIT_JPG|IMG_INIT_PNG))
 #define		image_shutdown()	(IMG_Quit())
 #define		image_free(I)		(SDL_DestroyTexture((I)))
+#define		image_fade(I, A)	(SDL_SetTextureAlphaMod((I), (A)))
 
 IMAGE		*image_load(const char *file);
 void		image_query(IMAGE *img, int *w, int *h);

@@ -1,9 +1,9 @@
 #include "common.h"
 
 #define MAX_SMALLVAR	512
-#define	MAX_SMALLPOOL	2048
+#define	MAX_SMALLPOOL	4096	
 #define MAX_BIGVAR	(1024*1024)
-#define MAX_BIGPOOL	63
+#define MAX_BIGPOOL	128
 
 static char	smallpool[MAX_SMALLVAR*MAX_SMALLPOOL];
 static char	bigpool[MAX_BIGVAR*MAX_BIGPOOL];

@@ -41,8 +41,9 @@ int	script_load(const char *luafile)
 	data = unz_load(luafile);
 	top1 = lua_gettop(lua);
 	if (luaL_dostring(lua, data)) {
-		luaL_where(lua, 1);
-		FATAL("%s %s", lua_tostring(lua, -1), lua_tostring(lua, -2));
+		//luaL_where(lua, 1);
+		//FATAL("%s %s", lua_tostring(lua, -1), lua_tostring(lua, -2));
+		FATAL("%s %s", luafile, lua_tostring(lua, -1));
 	}
 	top2 = lua_gettop(lua);
 	free(data);

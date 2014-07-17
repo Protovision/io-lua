@@ -54,7 +54,7 @@ void	video_init()
 
 	v_window = SDL_CreateWindow(
 		c_title->string, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		v_width->integer, v_height->integer, SDL_WINDOW_SHOWN);
+		v_width->integer, v_height->integer, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
 	if (v_window == NULL) {
 		FATAL(SDL_GetError());
 	}

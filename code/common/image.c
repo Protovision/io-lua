@@ -16,6 +16,9 @@ SDL_Texture	*image_load(const char *file)
 		FATAL(SDL_GetError());
 
 	SDL_FreeSurface(surface);
+
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
 	return texture;	
 }
 
@@ -36,4 +39,3 @@ void	image_colorize(SDL_Texture *image, Uint32 hue)
 
 	SDL_SetTextureColorMod(image, color.r, color.g, color.b);
 }
-

@@ -777,7 +777,7 @@ trap_t syscalls[] = {
 	{ "DrawBackground", trap_DrawBackground },
 	{ "GetImageSize", trap_GetImageSize },
 	{ "FreeImage", trap_FreeImage },
-
+	
 	/* Text functions */
 	{ "LoadFont", trap_LoadFont },
 	{ "DrawText", trap_DrawText },
