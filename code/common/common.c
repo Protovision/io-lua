@@ -3,7 +3,7 @@
 const char	*platform;
 var_t		*c_basezip, *c_gamezip, *c_datapath, *c_fps,
 		*c_fontsize, *c_fontfamily, *c_fgcolor, *c_bgcolor,
-		*c_title;
+		*c_title, *c_memblocks, *c_memsize;
 
 gameVar_t common_vars[] = {
 	{ &c_title, "title", "io-lua application" },
@@ -12,6 +12,8 @@ gameVar_t common_vars[] = {
 	{ &c_fontfamily, "fontfamily", "FONT_SANS" },
 	{ &c_fgcolor, "fgcolor", "0x000000FF" },
 	{ &c_bgcolor, "bgcolor", "0xFFFFFFFF" },
+	{ &c_memblocks, "memblocks", "4096" },
+	{ &c_memsize, "memsize", "65536" },
 	{ NULL, NULL, NULL },
 };
 
@@ -21,7 +23,6 @@ void	common_init(int argc, char *argv[])
 	char *s;
 
 	SDL_Init(0);
-	mem_init();
 	var_init();
 
 	for (i = 1; i != argc; ++i) {
@@ -56,7 +57,8 @@ void	common_init(int argc, char *argv[])
 	}
 
 	var_load(common_vars);
-	
+
+	pool_init(c_memblocks->integer, c_memsize->integer);	
 	unz_init();
 	event_init();
 	font_init();
@@ -73,7 +75,7 @@ void	common_shutdown()
 	font_shutdown();
 	event_shutdown();
 	unz_shutdown();
+	pool_shutdown();
 	var_shutdown();
-	mem_shutdown();
 }
 

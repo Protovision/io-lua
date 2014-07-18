@@ -5,10 +5,10 @@ static lua_State	*lua;
 void	*script_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
 {
 	if (nsize == 0) {
-		mem_free(ptr);
+		pool_free(ptr);
 		return NULL;
 	}
-	return mem_realloc(ptr, nsize);
+	return pool_realloc(ptr, nsize);
 }
 
 void	script_init()

@@ -64,15 +64,15 @@ var_t	*var_set(const char *varname, const char *value)
 
 	if (w == NULL) {
 		w = var_allocate();
-		w->name = mem_strdup(varname);
-		w->string = mem_strdup(value);
+		w->name = stralloc(varname);
+		w->string = stralloc(value);
 		w->prev = NULL;
 		w->next = v;
 		if (v) v->prev = w;
 		hashtable[hash] = w;
 	} else {
-		mem_free(w->string);
-		w->string = mem_strdup(value);
+		free(w->string);
+		w->string = stralloc(value);
 	}	
 		
 	w->real = atof(w->string);
@@ -94,8 +94,8 @@ void	var_shutdown()
 	var_t *v;
 	for (i = 0; i != VAR_HASHTABLE_SIZE; ++i) {
 		for (v = hashtable[i]; v; v = v->next) {
-			mem_free(v->name);
-			mem_free(v->string);
+			free(v->name);
+			free(v->string);
 			v->name = NULL;
 		}
 	}

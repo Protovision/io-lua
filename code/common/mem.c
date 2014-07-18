@@ -1,91 +1,79 @@
+#ifndef POOL_H
+#define POOL_H
+
 #include "common.h"
 
-#define MAX_SMALLVAR	512
-#define	MAX_SMALLPOOL	4096	
-#define MAX_BIGVAR	(1024*1024)
-#define MAX_BIGPOOL	128
+struct block_header {
+	size_t	size;
+	struct block_header *next;
+	char	data[0];
+};
 
-static char	smallpool[MAX_SMALLVAR*MAX_SMALLPOOL];
-static char	bigpool[MAX_BIGVAR*MAX_BIGPOOL];
+#define _POOL_BLKHDR(P)		((struct block_header*)((char*)(P) - sizeof(struct block_header)))
 
-void	mem_init()
+static char			*pool, *pool_end;
+static struct block_header	*freeblock;
+static size_t blksize;
+
+void	pool_init(size_t count, size_t size)
 {
-	memset(smallpool, 0, sizeof(smallpool));
-	memset(bigpool, 0, sizeof(bigpool));
+	pool = (char*)calloc(count, size);
+	if (pool == NULL)
+		FATAL("Failed to initialize memory pool.");		
+	pool_end = pool + count * size;
+	blksize = size;
+	freeblock = (struct block_header*)pool;
 }
 
-void	mem_shutdown() {}
-
-void	*mem_pool_alloc(size_t size, void *pool, size_t poolsize, size_t varsize)
+void	pool_shutdown()
 {
-	size_t *p;
-	size_t *pool_end;
-
-	pool_end = (size_t*)((char*)pool + poolsize*varsize);
-	for (p = (size_t*)pool; *p; p = (size_t*)((char*)p+varsize)) {
-		if (p == (size_t*)pool_end) {
-			return NULL;
-		}
+	if (pool) {
+		free(pool);
+		pool = NULL;
 	}
-	*p = size;
-	return ++p;
 }
 
-void	*mem_alloc(size_t size)
+void	*pool_alloc(size_t size)
 {
-	void *ptr;
+	struct block_header *blk;
 
-	if (size+sizeof(size_t) < MAX_SMALLVAR) {
-		ptr = mem_pool_alloc(size, smallpool, MAX_SMALLPOOL, MAX_SMALLVAR);
+	if (size > blksize - sizeof(struct block_header))
+		FATAL("Memory pool block capacity exceeded.");
+
+	blk = freeblock;
+	if ((char*)blk == pool_end) 
+		FATAL("Memory pool capacity exceeded.");
+
+	if (blk->next == NULL) {
+		freeblock = (struct block_header*)((char*)blk + blksize);
 	} else {
-		ptr = mem_pool_alloc(size, bigpool, MAX_BIGPOOL, MAX_BIGVAR);
+		freeblock = blk->next;
 	}
 
-	if (ptr == NULL) {
-		FATAL("Out of game memory", size);
-	}
+	blk->size = size;	
+	return blk->data;
+}
+
+void	*pool_realloc(void *ptr, size_t size)
+{
+	if (ptr == NULL) return pool_alloc(size);
+
+	if (size > blksize - sizeof(struct block_header))
+		FATAL("Memory pool block capacity exceeded.");
+
+	_POOL_BLKHDR(ptr)->size = size;
 	return ptr;
 }
 
-void	*mem_realloc(void *ptr, size_t size)
+void	pool_free(void *ptr)
 {
-	void *newptr;
+	struct block_header *b;
 
-	if (ptr == NULL) return mem_alloc(size);
-
-	if ((char*)ptr - smallpool < MAX_SMALLPOOL*MAX_SMALLVAR) {
-		if (size+sizeof(size_t) < MAX_SMALLVAR) {
-			((size_t*)ptr)[-1] = size;
-			return ptr;
-		} else {
-			newptr = mem_alloc(size);
-			memcpy(newptr, ptr, ((size_t*)ptr)[-1]);
-			return newptr;
-		}	
-	} else if ((char*)ptr - bigpool < MAX_BIGPOOL*MAX_BIGVAR) {
-		if (size+sizeof(size_t) < MAX_BIGVAR) {
-			((size_t*)ptr)[-1] = size;
-			return ptr;
-		} else {
-			FATAL("Out of game memory", size);
-		}
-	}
-
-	return NULL;
+	if (ptr == NULL) return;	
+	b = _POOL_BLKHDR(ptr);
+	b->size = 0;
+	b->next = freeblock;	
+	freeblock = b;
 }
 
-char	*mem_strdup(const char *s)
-{
-	char *p;
-	p = (char*)mem_alloc(strlen(s)+1);
-	strcpy(p, s);
-	return p;
-}
-
-void	mem_free(void *ptr)
-{
-	if (ptr == NULL) return;
-	((size_t*)ptr)[-1] = 0;
-}
-
-
+#endif

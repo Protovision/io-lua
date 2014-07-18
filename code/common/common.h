@@ -256,12 +256,11 @@ void	trap_shutdown();
  * =====================================================
  */
 
-void	mem_init();
-void	mem_shutdown();
-void	*mem_alloc(size_t size);
-void	*mem_realloc(void *ptr, size_t size);
-void	mem_free(void *ptr);
-char	*mem_strdup(const char *s);
+void	pool_init();
+void	pool_shutdown();
+void	*pool_alloc(size_t size);
+void	*pool_realloc(void *ptr, size_t size);
+void	pool_free(void *ptr);
 
 /* =====================================================
  * font.c
@@ -300,6 +299,8 @@ void		image_colorize(IMAGE *img, Uint32 hue);
 
 char	*va(const char *fmt, ...);
 char	*pathjoin(const char *base, const char *path);
+char	*stralloc(const char *s);
+
 //#define basepath(p)	(pathjoin(c_basepath->string, (p)))
 //#define gamepath(p)	(pathjoin(c_gamepath->string, (p)))
 #define datapath(p)	(pathjoin(c_datapath->string, (p)))
