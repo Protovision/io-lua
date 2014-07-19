@@ -93,14 +93,13 @@ int	trap_LoadImage(lua_State *s)
 int	trap_DrawText(lua_State *s)
 {
 	int x, y;
-	unsigned int color;
-	const char *text;
+	const char *text, *color;
 	FONT *font;
 
-	trap_args(s, "DrawText", "iisip", &x, &y, &text, &color, &font);
+	trap_args(s, "DrawText", "iissp", &x, &y, &text, &color, &font);
 
 	if (color == 0) {
-		sscanf(c_fgcolor->string, "%x", &color);
+		color = c_fgcolor->string;
 	}
 	if (font == NULL) {
 		font = (FONT*)script_import_pointer(c_fontfamily->string);

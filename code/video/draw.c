@@ -46,15 +46,17 @@ void	video_drawClip(int dstx, int dsty, IMAGE *image, int x, int y, int w, int h
 	SDL_RenderCopy(v_renderer, image, &src, &dst);	
 }
 
-void	video_drawText(int x, int y, const char *text, FONT *font, unsigned int color)
+void	video_drawText(int x, int y, const char *text, FONT *font, const char *color)
 {
 	SDL_Surface *surface;
 	SDL_Rect rect;
 	SDL_Texture *texture;
+	unsigned int c;	
 	extern SDL_Renderer *v_renderer;
 
-	color = hton32(color);
-	surface = TTF_RenderText_Blended(font, text, *(SDL_Color*)&color);
+	sscanf(color, "%x", &c);	
+	c = hton32(c);
+	surface = TTF_RenderText_Blended(font, text, *(SDL_Color*)&c);
 	if (surface == NULL) {
 		FATAL(TTF_GetError());
 	}
