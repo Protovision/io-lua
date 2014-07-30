@@ -25,6 +25,7 @@ void	audio_init()
 
 	var_load(sound_vars);
 
+/*
 	s_driver = var_get("s_driver");
 
 	if (s_driver == NULL) {	
@@ -38,19 +39,19 @@ void	audio_init()
 			s_driver = var_set("s_driver", "0");
 		}
 	}
-
+*/
 	if (!SDL_WasInit(SDL_INIT_AUDIO)) {
 		if (SDL_InitSubSystem(SDL_INIT_AUDIO))
 			FATAL(SDL_GetError());
 	}
 
-	Mix_Init(MIX_INIT_OGG);
-
+/*
 	device = SDL_GetAudioDeviceName(s_device->integer, 0);
 	driver = SDL_GetAudioDriver(s_driver->integer);
 
 	if (SDL_AudioInit(driver))
 		FATAL(SDL_GetError());
+*/
 
 	memset(&desired, 0, sizeof(desired));
 	desired.freq = s_freq->integer;
@@ -64,6 +65,8 @@ void	audio_init()
 
 	if (Mix_OpenAudio(desired.freq, desired.format, desired.channels, desired.samples))
 		FATAL(Mix_GetError());
+
+	Mix_Init(MIX_INIT_OGG);
 
 	if (Mix_AllocateChannels(16) < 16)
 		FATAL(Mix_GetError());

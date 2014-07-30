@@ -762,6 +762,16 @@ int	trap_SetMusicVolume(lua_State *s)
 	return 0;
 }
 
+int	trap_FadeImage(lua_State *s)
+{
+	IMAGE *image;
+	int alpha;
+
+	trap_args(s, "FadeImage", "pi", &image, &alpha);
+	image_fade(image, alpha);
+	return 0;
+}
+
 typedef struct {
 	const char *name;
 	int (*func)(lua_State*);
@@ -776,13 +786,14 @@ trap_t syscalls[] = {
 	{ "DrawBackground", trap_DrawBackground },
 	{ "GetImageSize", trap_GetImageSize },
 	{ "FreeImage", trap_FreeImage },
+	{ "FadeImage", trap_FadeImage },
 	
 	/* Text functions */
 	{ "LoadFont", trap_LoadFont },
 	{ "DrawText", trap_DrawText },
 	{ "GetTextSize", trap_GetTextSize },
 	{ "FreeFont", trap_FreeFont },
-
+	
 	/* Cursor functions */
 	{ "LoadCursor", trap_LoadCursor },
 	{ "GetCursor", trap_GetCursor },

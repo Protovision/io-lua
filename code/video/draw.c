@@ -51,12 +51,14 @@ void	video_drawText(int x, int y, const char *text, FONT *font, const char *colo
 	SDL_Surface *surface;
 	SDL_Rect rect;
 	SDL_Texture *texture;
+	SDL_Color d;
 	unsigned int c;	
 	extern SDL_Renderer *v_renderer;
 
 	sscanf(color, "%x", &c);	
 	c = hton32(c);
-	surface = TTF_RenderText_Blended(font, text, *(SDL_Color*)&c);
+	d = *(SDL_Color*)&c;
+	surface = TTF_RenderText_Blended(font, text, d);
 	if (surface == NULL) {
 		FATAL(TTF_GetError());
 	}

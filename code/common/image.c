@@ -39,3 +39,9 @@ void	image_colorize(SDL_Texture *image, Uint32 hue)
 
 	SDL_SetTextureColorMod(image, color.r, color.g, color.b);
 }
+
+void	image_fade(SDL_Texture *image, int alpha)
+{
+	if (SDL_SetTextureAlphaMod(image, (Uint8)alpha))
+		FATAL(SDL_GetError());
+}
