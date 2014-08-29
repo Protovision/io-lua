@@ -559,6 +559,17 @@ int	trap_Call(lua_State *s)
 	return returned;
 }
 
+/*
+int	trap_Fork(lua_State *s)
+{
+	const char *luafile;
+	
+	trap_args(s, "Fork", "s", &luafile);
+	script_fork(luafile);
+	return 0;
+}
+*/
+
 int	trap_LoadCursor(lua_State *s)
 {
 	CURSOR *cursor;
@@ -852,7 +863,7 @@ trap_t syscalls[] = {
 
 	/* Window functions */
 	{ "GetWindowSize", trap_GetWindowSize },
-	
+
 	/* Other functions */
 	{ "Call", trap_Call },
 	{ "MessageBox", trap_MessageBox },
