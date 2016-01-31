@@ -612,7 +612,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = "Mark Swoope";
+				ORGANIZATIONNAME = "Protovision";
 				TargetAttributes = {
 					4DE8BC381969B7B800BBFAAF = {
 						TestTargetID = 4DE8BC1D1969B7B800BBFAAF;

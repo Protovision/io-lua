@@ -1,14 +1,14 @@
 #include "common.h"
 #include "video.h"
 
-static void	input()
+static void input()
 {
 	SDL_Event e;
 	event_t ev;
 
-	while (SDL_PollEvent(&e)) {
+	while ( SDL_PollEvent(&e) ) {
 
-		switch (e.type) {
+		switch ( e.type ) {
 
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:

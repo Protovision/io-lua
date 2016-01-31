@@ -31,7 +31,7 @@ void	quit(int sig)
 
 int	main(int argc, char *argv[])
 {
-	init(argc, argv);
+	init( argc, argv );
 
 	signal(SIGTERM, quit);
 	signal(SIGINT, quit);
